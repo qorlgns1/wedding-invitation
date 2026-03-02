@@ -1,0 +1,299 @@
+:root {
+  --modal-backdrop: rgba(0, 0, 0, 0.45);
+  --modal-surface: #ffffff;
+  --modal-border: #e9e0d3;
+  --primary-button: #2d2520;
+  --primary-button-text: #f9f5f0;
+  --warning: #b45309;
+  --danger: #991b1b;
+}
+
+body {
+  margin: 0;
+}
+
+body.intro-active {
+  overflow: hidden;
+}
+
+.account-groups {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+  padding: 0 20px 24px;
+}
+
+.account-group-title {
+  margin: 0 0 10px;
+  font-size: 1rem;
+  text-align: center;
+}
+
+.account-list {
+  display: grid;
+  gap: 10px;
+}
+
+.account-card {
+  border: 1px solid var(--modal-border);
+  border-radius: 12px;
+  padding: 12px;
+  background: #fff;
+}
+
+.account-owner {
+  font-weight: 700;
+}
+
+.account-number {
+  font-size: 0.95rem;
+  margin: 8px 0;
+  word-break: break-all;
+}
+
+.account-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.account-actions button,
+.account-actions a,
+.share-button,
+.submit-btn,
+.guestbook-action,
+.modal-close {
+  border: 0;
+  border-radius: 10px;
+  padding: 9px 12px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  line-height: 1.2;
+}
+
+.account-actions button,
+.share-button,
+.submit-btn,
+.guestbook-action,
+#gallery-lightbox-close {
+  background: var(--primary-button);
+  color: var(--primary-button-text);
+}
+
+.account-actions a {
+  text-decoration: none;
+  background: #f6e8b7;
+  color: #221a13;
+}
+
+.rsvp-callout {
+  padding: 16px 18px 30px;
+}
+
+.guestbook-message-list {
+  display: grid;
+  gap: 12px;
+  padding: 0 20px;
+}
+
+.guestbook-entry {
+  border: 1px solid var(--modal-border);
+  border-radius: 12px;
+  padding: 12px;
+  background: #fff;
+}
+
+.guestbook-entry-head {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.9rem;
+  margin-bottom: 8px;
+}
+
+.guestbook-entry-name {
+  font-weight: 700;
+}
+
+.guestbook-entry-message {
+  white-space: pre-wrap;
+  word-break: break-word;
+  margin: 0;
+}
+
+.guestbook-entry-actions {
+  margin-top: 10px;
+  display: flex;
+  gap: 8px;
+}
+
+.guestbook-action.danger {
+  background: var(--danger);
+}
+
+.guestbook-pagination {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin: 16px 0 18px;
+}
+
+.guestbook-page-btn {
+  border: 1px solid #d8c7b4;
+  background: #fff;
+  border-radius: 8px;
+  padding: 7px 11px;
+  cursor: pointer;
+}
+
+.guestbook-page-btn.active {
+  background: #2d2520;
+  color: #fff;
+  border-color: #2d2520;
+}
+
+.guestbook-empty {
+  text-align: center;
+  padding: 20px;
+}
+
+.modal {
+  position: fixed;
+  inset: 0;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 3000;
+  background: var(--modal-backdrop);
+  padding: 20px;
+}
+
+.modal.is-open {
+  display: flex;
+}
+
+.modal-content {
+  width: min(560px, 100%);
+  background: var(--modal-surface);
+  border-radius: 14px;
+  padding: 18px;
+  border: 1px solid var(--modal-border);
+  position: relative;
+  max-height: 85vh;
+  overflow: auto;
+}
+
+.modal-content.modal-sm {
+  width: min(420px, 100%);
+}
+
+.modal-close {
+  position: absolute;
+  right: 10px;
+  top: 10px;
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  font-size: 1.2rem;
+}
+
+.form-group {
+  margin-bottom: 14px;
+}
+
+.form-label,
+.check-label {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+
+.form-group input,
+.form-group textarea,
+.form-group select {
+  box-sizing: border-box;
+  width: 100%;
+  border: 1px solid #cfbeaa;
+  border-radius: 10px;
+  padding: 10px;
+  font-size: 0.95rem;
+}
+
+.form-hint,
+.form-modal-subtitle {
+  margin: 6px 0 0;
+  color: #6f5f4f;
+  font-size: 0.86rem;
+}
+
+.option-buttons {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.option-buttons label {
+  border: 1px solid #cfbeaa;
+  border-radius: 10px;
+  padding: 9px 10px;
+  text-align: center;
+  cursor: pointer;
+  font-size: 0.92rem;
+}
+
+.option-buttons input {
+  display: none;
+}
+
+.option-buttons label.active {
+  border-color: #2d2520;
+  background: #2d2520;
+  color: #fff;
+}
+
+.submit-btn {
+  width: 100%;
+  padding: 11px;
+  font-weight: 700;
+}
+
+.share-buttons {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.toast {
+  position: fixed;
+  left: 50%;
+  bottom: 24px;
+  transform: translateX(-50%) translateY(14px);
+  background: #222;
+  color: #fff;
+  padding: 10px 14px;
+  border-radius: 999px;
+  font-size: 0.9rem;
+  opacity: 0;
+  transition: all 0.22s ease;
+  z-index: 5000;
+}
+
+.toast.show {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+.app-disabled-note {
+  margin: 10px 0 0;
+  color: var(--warning);
+  text-align: center;
+  font-size: 0.86rem;
+}
+
+@media (max-width: 768px) {
+  .account-groups {
+    grid-template-columns: 1fr;
+  }
+
+  .share-buttons {
+    grid-template-columns: 1fr;
+  }
+}

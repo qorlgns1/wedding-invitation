@@ -1,0 +1,811 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>배기훈 ♥ 김슬비의 결혼식에 초대합니다</title>
+    <link rel="icon" href="static/assets/images/favicon.webp"/>
+
+    <!-- Preload critical images for intro animation -->
+    <link rel="preload" as="image" href="static/assets/images/animation1.webp" fetchpriority="high"/>
+        <!-- Preload font data for Vara.js to speed up initial animation -->
+    <link rel="preload" as="fetch" href="static/assets/fonts/json/Parisienne.json" crossorigin="anonymous"/>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com"/>
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous"/>
+    <link rel="stylesheet"
+          href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600&family=Noto+Sans+KR:wght@300;400;500;600;700&family=Sacramento&family=Sriracha&family=Parisienne&display=swap"/>
+
+    <!-- Meta Tags -->
+    <meta property="og:title" content="기훈 ♥ 슬비의 결혼식"/>
+    <meta property="og:description" content="2026년 08월 08일 (토) 오후 2시, 합정 웨딩시그니처 4F 아너스홀에서 진행됩니다"/>
+    <meta property="og:image" content="https://private-user-images.githubusercontent.com/63835963/556874912-e269c859-95e6-4fc1-8c7b-81f611bdea09.webp?jwt=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJnaXRodWIuY29tIiwiYXVkIjoicmF3LmdpdGh1YnVzZXJjb250ZW50LmNvbSIsImtleSI6ImtleTUiLCJleHAiOjE3NzI0NTM0OTMsIm5iZiI6MTc3MjQ1MzE5MywicGF0aCI6Ii82MzgzNTk2My81NTY4NzQ5MTItZTI2OWM4NTktOTVlNi00ZmMxLThjN2ItODFmNjExYmRlYTA5LndlYnA_WC1BbXotQWxnb3JpdGhtPUFXUzQtSE1BQy1TSEEyNTYmWC1BbXotQ3JlZGVudGlhbD1BS0lBVkNPRFlMU0E1M1BRSzRaQSUyRjIwMjYwMzAyJTJGdXMtZWFzdC0xJTJGczMlMkZhd3M0X3JlcXVlc3QmWC1BbXotRGF0ZT0yMDI2MDMwMlQxMjA2MzNaJlgtQW16LUV4cGlyZXM9MzAwJlgtQW16LVNpZ25hdHVyZT0zZmU1NTUwOTIzYjFkNDFlMDE3OTc0N2U2Zjk4MjhkNGYyY2Y4NjMzM2ExZjBlNTQ3ZWRlYWY5MTIxZmJjZDJkJlgtQW16LVNpZ25lZEhlYWRlcnM9aG9zdCJ9.-eLHvLkTW7b3ZdjJtV15pSJdFU0B-Ee_3n6obCWqFV8"/>
+    <meta property="og:type" content="website"/>
+
+    <!-- 스타일 -->
+    <!-- static/css/*.css 들을 로드하여 main.min.css에 합치므로, 이것만 로드  -->
+    <link rel="stylesheet" href="static/css/main.min.css">
+    <!-- 커스텀 오버라이드 스타일 -->
+    <link rel="stylesheet" href="static/css/custom-overrides.css">
+    <link rel="stylesheet" href="static/css/node-overrides.css">
+
+</head>
+<body>
+
+<!-- 입장 애니메이션 오버레이 -->
+<div class="intro-animation-overlay" id="intro-animation-overlay">
+    <!-- Scene 1: Kihoon & Seulbi's Wedding Day -->
+    <div class="intro-scene intro-scene-1">
+        <img src="static/assets/images/animation1.webp" alt="Wedding Couple" class="intro-bg-image">
+
+        <div class="intro-content">
+            <div class="intro-main-text" id="vara-container">
+                <!-- Vara.js will render SVG here -->
+            </div>
+
+            <div class="intro-bottom-text">
+                <span class="intro-bottom-left">WEDDING</span>
+                <span class="intro-bottom-right">INVITATION</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Config Data for JavaScript -->
+<script id="config-data" type="application/json">{"wedding":{"groom":{"name_kr":"배기훈","name_en":"Kihoon","display_name":"기훈","birth_order":"장남","parents":{"father":"배갑천","mother":"이선미"}},"bride":{"name_kr":"김슬비","name_en":"Seulbi","display_name":"슬비","birth_order":"장녀","parents":{"father":"김종선","mother":"박선영"}},"date":{"year":2026,"month":8,"day":8,"time":"14:00","day_of_week":"토","display_time":"오후 2시","iso_format":"2026-08-08T14:00:00"},"venue":{"name":"합정 웨딩시그니처 4F 아너스홀","address":"합정 웨딩시그니처 4F 아너스홀","full_address":"합정 웨딩시그니처 4F 아너스홀"}},"accounts":{"groom":[{"name":"이선미","bank":"우리은행","number":"123456-01-123456" },{"name":"배기훈","bank":"카카오뱅크","number":"3333-01-8224159"}],"bride":[{"name":"김종선","bank":"농협은행","number":"132-12-123456" },{"name":"박선영","bank":"신한은행","number":"123-123-123456" },{"name":"김슬비","bank":"카카오뱅크","number":"3333-20-7595186" }]},"qna":[{"id":1,"question":"결혼식은 언제, 어디서 하나요?","answer":"2026년 08월 08일 (토) 오후 2시에 합정 웨딩시그니처 4F 아너스홀에서 진행됩니다."},{"id":2,"question":"주차가 가능한가요?","answer":"주차 안내는 예식장 공지에 맞춰 업데이트 예정입니다."},{"id":3,"question":"대중교통으로 어떻게 가나요?","answer":"대중교통 안내는 추후 업데이트 예정입니다."},{"id":4,"question":"식사는 제공되나요?","answer":"네, 결혼식 후 피로연에서 식사가 제공됩니다.<br>식이 진행되는 홀 같은 층에 뷔페 형식으로 준비되어 있습니다."}],"content":{"page_title":"배기훈 ♥ 김슬비의 결혼식에 초대합니다","meta":{"title":"기훈 ♥ 슬비의 결혼식","description":"2026년 08월 08일 (토) 오후 2시, 합정 웨딩시그니처 4F 아너스홀에서 진행됩니다","image":"https://private-user-images.githubusercontent.com/63835963/556874912-e269c859-95e6-4fc1-8c7b-81f611bdea09.webp?jwt=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJnaXRodWIuY29tIiwiYXVkIjoicmF3LmdpdGh1YnVzZXJjb250ZW50LmNvbSIsImtleSI6ImtleTUiLCJleHAiOjE3NzI0NTM0OTMsIm5iZiI6MTc3MjQ1MzE5MywicGF0aCI6Ii82MzgzNTk2My81NTY4NzQ5MTItZTI2OWM4NTktOTVlNi00ZmMxLThjN2ItODFmNjExYmRlYTA5LndlYnA_WC1BbXotQWxnb3JpdGhtPUFXUzQtSE1BQy1TSEEyNTYmWC1BbXotQ3JlZGVudGlhbD1BS0lBVkNPRFlMU0E1M1BRSzRaQSUyRjIwMjYwMzAyJTJGdXMtZWFzdC0xJTJGczMlMkZhd3M0X3JlcXVlc3QmWC1BbXotRGF0ZT0yMDI2MDMwMlQxMjA2MzNaJlgtQW16LUV4cGlyZXM9MzAwJlgtQW16LVNpZ25hdHVyZT0zZmU1NTUwOTIzYjFkNDFlMDE3OTc0N2U2Zjk4MjhkNGYyY2Y4NjMzM2ExZjBlNTQ3ZWRlYWY5MTIxZmJjZDJkJlgtQW16LVNpZ25lZEhlYWRlcnM9aG9zdCJ9.-eLHvLkTW7b3ZdjJtV15pSJdFU0B-Ee_3n6obCWqFV8"},"intro_animation":{"scene1":{"main_text":"Kihoon & Seulbi's Wedding Day","bottom_left":"WEDDING","bottom_right":"INVITATION"}},"countdown":{"labels":{"days":"DAYS","hour":"HOUR","min":"MIN","sec":"SEC"},"message":"기훈 ♥ 슬비의 결혼식이 {days}일 남았습니다"},"buttons":{"google_calendar":"Google Calendar에 추가","photo_upload":"사진 업로드","write_message":"작성하기","kakao_share":"카카오톡으로 초대장 보내기","copy":"복사","confirm":"확인","cancel":"취소","delete":"삭제","save":"저장","submit":"제출하기","write_complete":"작성 완료"},"image_share":{"message":"저희의 새로운 시작을<br>함께 해주셔서 감사합니다."},"letter":{"title":"두 사람의 결혼식에 초대합니다.","header":"I N V I T A T I O N","content":"8년의 시간,<br>그리고 또 하나의 8이 겹치는 날.<br><br>지구 반대편에서 운명처럼 만나<br>2026년 8월 8일, 사랑의 무한대(∞)를 약속합니다.<br><br>지금처럼, 앞으로도<br>서로의 가장 큰 행복으로 함께하겠습니다."},"contact_section":{"title":"연락처","subtitle":"궁금한 점이 있으시면 언제든지 연락주세요","groom_title":"신랑","bride_title":"신부","groom_contact_title":"신랑 측 혼주","bride_contact_title":"신부 측 혼주","father_label":"아버지","mother_label":"어머니"},"d_day":{"prefix":"기훈","suffix":"슬비의 결혼식이","symbol":"♥︎"},"rsvp":{"title":"RSVP","subtitle":"참석 의사를 전해주세요","button_text":"참석 의사 전달하기"},"gallery":{"title":"웨딩 갤러리","subtitle_en":"GALLERY","subtitle":"사진을 클릭하면 더 크게 볼 수 있습니다","total_photos":4,"nav_buttons":{"prev_aria":"이전 사진","next_aria":"다음 사진"}},"video_section":{"subtitle_en":"OUR STORY","title":"우리의 이야기","subtitle":"두 사람의 소중한 순간들"},"qna_section":{"subtitle_en":"FAQ","title":"자주 묻는 질문","subtitle":"궁금한 점들을 모아봤어요"},"account_section":{"subtitle_en":"ACCOUNT","title":"마음 전하기","groom_button":"신랑 측 계좌번호","bride_button":"신부 측 계좌번호","modal_title_groom":"신랑 측 계좌번호","modal_title_bride":"신부 측 계좌번호","copy_button_text":"복사하기","kakaopay_button_text":"카카오톡 송금","kakaopay_alt_text":"카카오톡 송금","copy_success_message":"계좌번호가 복사되었습니다! 💰","copy_error_message":"복사에 실패했습니다. 다시 시도해주세요."},"location":{"subtitle_en":"INFORMATION","title":"예식정보 및 안내 사항","tabs":{"photobooth":"포토 부스","transport":"교통 수단"},"photobooth_content":{"text":"포토부스가 설치될 예정입니다.<br>귀한 발걸음 해주신 여러분의<br>환한 미소 남겨주시면 소중히 간직하겠습니다."},"copy_address_text":"클릭하면 주소가 복사됩니다","map_click_hint":"클릭하면 크게 볼 수 있습니다","map_lightbox_info":"찾아오는 길","map_buttons":{"naver":"네이버맵","kakao":"카카오맵","tmap":"티맵"}},"guestbook":{"subtitle_en":"GUESTBOOK","title":"방명록","subtitle":"신랑신부에게 따뜻한 축하 메시지를 남겨주세요","preview_text":"여러분의 소중한 축하 메시지를<br>방명록에 남겨주세요","button_text":"축하 메세지 작성하기","messages_title":"축하 메시지","empty_message":"아직 남겨진 메시지가 없습니다","empty_subtitle":"첫 번째 축하 메시지를 남겨보세요!","loading_message":"메시지를 불러오는 중..."},"snaps":{"subtitle_en":"CAPTURE OUR MOMENTS","title":"Snaps","description":["신랑신부의 행복한 순간을 담아주세요.","예식 당일, 아래 버튼을 통해 사진을 올려주세요.","많은 참여 부탁드려요!"],"upload_button":"사진 업로드","upload_modal":{"title":"사진 업로드 중...","preparing":"업로드 준비 중...","close_button":"확인"}},"share":{"title":"공유하기","subtitle":"소중한 분들과 함께 저희의 특별한 날을 공유해주세요","message":"소중한 분들과 함께 저희의 특별한 날을<br>공유해주세요 💕","buttons":{"kakao":"카카오톡 공유","link":"링크 복사","native":"공유하기"},"kakao_share":{"title":"💒 기훈 ♥ 슬비의 결혼식","description":"2026년 08월 08일 (토) 오후 2시\n합정 웨딩시그니처 4F 아너스홀에서 진행됩니다.\n\n소중한 분을 모시고 참석해주시면 감사하겠습니다.","button_title":"청첩장 보기"}},"footer":{"visitor_stats":{"today":"TODAY","total":"TOTAL"}},"chatbot":{"subtitle_en":"AI CHATBOT","name":"기훈 & 슬비 💕","title":"궁금한 것이 있으신가요?","subtitle":"저희와 결혼식에 대해 궁금한 것이 있으시면 언제든 물어보세요! 💕","placeholder":"예: 두 분은 어떻게 만나셨나요?","status_online":"온라인","submit_button":"질문하기","fallback_message":"죄송해요 😅 해당 질문에 대한 정보가 없네요 😢 다른 궁금한 것이 있으시면 언제든 물어보세요!","error_message":"앗! 잠시 문제가 생겼네요 😅 조금 후에 다시 시도해주세요!","thinking_message":"생각하고 있어요... 🤔","profile_image":"/static/assets/images/chatbot-profile.webp","welcome":{"greeting":"안녕하세요! 저희 커플에게 궁금한 걸 물어보세요! 😊","suggested_questions":["두 분은 어떻게 만나셨나요?","신혼여행은 어디로 가나요?","식사는 어떻게 되나요?","결혼식에서 찍은 사진은 어떻게 공유하면 되나요?"]}},"bgm":{"notification":"배경음악이 준비되었습니다"},"modals":{"edit_message":{"title":"메시지 수정","password_prompt":"작성할 때 입력한 비밀번호를 입력해주세요.","password_placeholder":"비밀번호 입력","name_label":"이름","name_placeholder":"이름을 입력해주세요","message_label":"메시지","message_placeholder":"수정할 메시지를 입력해주세요"},"delete_message":{"title":"메시지 삭제","password_prompt":"작성할 때 입력한 비밀번호를 입력해주세요.","password_placeholder":"비밀번호 입력"},"guestbook":{"title":"축하 메시지","subtitle":"따뜻한 축하의 말씀을<br>남겨주세요 💝","name_label":"성함","name_placeholder":"성함을 입력해주세요","message_label":"축하 메시지","message_placeholder":"축하 메시지를 입력해주세요","char_counter":"/ 500","password_label":"비밀번호","password_placeholder":"수정/삭제 시 필요 (4자 이상)","password_hint":"메시지 수정 및 삭제 시 사용됩니다"},"rsvp":{"title":"참석 의사 전달","can_attend_label":"참석하실 수 있나요?","can_attend_options":{"yes":"참석할게요","no":"참석이 어려워요"},"which_side_label":"어느 분의 하객이신가요?","which_side_options":{"groom":"신랑측","bride":"신부측"},"guest_name_label":"성함","guest_name_placeholder":"(필수) 대표자 한 분의 성함을 입력해 주세요.","companion_extra_label":"추가인원","companion_extra_prefix":"외","companion_extra_suffix":"명","meal_attendance_label":"식사여부","meal_attendance_options":{"yes":"식사함","no":"식사안함","yes_value":"식사 참석","no_value":"식사 불참"},"privacy_title":"개인정보 수집 및 이용 동의(필수)","privacy_description":"참석여부 전달을 위한 개인정보 수집 및 이용에 동의해주세요.<br>항목: 성함, 연락처, 동행인 수","privacy_agree":"동의합니다.","phone_label":"연락처 끝자리 (선택)","phone_placeholder":"연락처 끝 4자리 (선택)"},"attendance_notice":{"title":"참석 의사 전달","description":"특별한 날 축하의 마음으로 참석해주시는<br>모든 분들을 한 분 한 분<br>더욱 귀하게 모실 수 있도록,<br>아래 버튼으로 신랑 & 신부에게<br>꼭 참석여부 전달을 부탁드립니다.","buttons":{"rsvp":"참석 의사 전달하기","hide_today":"오늘 하루 보지 않기"}}}},"form_content":{"guestbook":{"title":"방명록","subtitle":"소중한 축하 메시지를 남겨주세요<br>여러분의 따뜻한 마음이 큰 힘이 됩니다","example_title":"💌 메시지 예시","examples":["결혼을 진심으로 축하드려요! 행복한 가정 꾸리세요","두 분 정말 잘 어울리세요! 평생 지금처럼 사랑하며 살아가길 바라요","오늘보다 내일이, 내일보다 모레가 더 행복하길 바랍니다","새로운 시작을 축하하며, 앞으로도 서로 아끼며 살아가세요"],"form":{"name_label":"성함","name_placeholder":"성함을 입력해주세요","message_label":"축하 메시지","message_placeholder":"신랑신부에게 전하고 싶은 따뜻한 메시지를 남겨주세요...","submit_button":"축하 메시지 전송","back_link":"← 메인 페이지로 돌아가기"},"thanks":{"title":"축하 메시지가 전달되었습니다!","message":"소중한 축하 메시지를 보내주셔서 감사합니다.<br>신랑신부가 감사히 읽어보겠습니다.","preview":"여러분의 따뜻한 마음이<br>저희에게 큰 힘과 기쁨이 됩니다. 💕"}},"rsvp":{"title":"참석 의사 전달하기","subtitle":"한 분 한 분을 소중히 모실 수 있도록 참석 의사를 전해주시면<br>감사하겠습니다.","form":{"which_side_label":"어느 분의 하객이신가요?","which_side_options":["신랑","신부"],"can_attend_label":"참석하실 수 있나요?","can_attend_options":["참석할게요","참석이 어려워요"],"guest_name_label":"성함이 어떻게 되시나요?","guest_name_placeholder":"참석자 본인 성함","phone_label":"동명이인 체크를 위한 번호를 알려주세요","phone_placeholder":"핸드폰 번호 뒤 4자리","submit_button":"참석 의사 전달하기","back_link":"← 메인 페이지로 돌아가기"},"thanks":{"title":"참석 의사가 전달되었습니다!","message":"소중한 응답 감사합니다. 💕<br>신랑신부가 감사히 확인하겠습니다.","preview":"여러분의 따뜻한 마음이<br>저희에게 큰 힘과 기쁨이 됩니다. 💕"}}},"external_links":{"maps":{"naver":"https://map.naver.com/v5/search/%ED%95%A9%EC%A0%95%20%EC%9B%A8%EB%94%A9%EC%8B%9C%EA%B7%B8%EB%8B%88%EC%B2%98","kakao":"https://map.kakao.com/?q=%ED%95%A9%EC%A0%95%20%EC%9B%A8%EB%94%A9%EC%8B%9C%EA%B7%B8%EB%8B%88%EC%B2%98","tmap":"https://www.google.com/maps/search/?api=1&query=%ED%95%A9%EC%A0%95%20%EC%9B%A8%EB%94%A9%EC%8B%9C%EA%B7%B8%EB%8B%88%EC%B2%98"}},"assets":{"background_music":"/static/assets/audio/wedding-music.mp3","cover_image":"/static/assets/images/cover.webp","gallery_path":"/static/assets/images/wedding-snaps/","map_image":"/static/assets/images/wedding-signature.webp","share_background_image":"/static/assets/images/couple-bridge.webp","kakaopay_icon":"/static/assets/images/payment_icon_yellow_small.webp","kakaotalk_icon":"/static/assets/images/kakaotalk.webp"}}</script>
+
+<!-- 커버 섹션 -->
+<section class="cover">
+    <div class="white-gradient-blur"></div>
+    <div class="blur-gradient"></div>
+
+    <div class="cover-title-container">
+        <div class="names-en-box">
+            <span class="names en-sacramento">Kihoon & Seulbi</span>
+        </div>
+
+        <div class="event-date-and-place-box">
+            <span class="event-date-and-time kr">2026년 08월 08일 (토) 오후 2시</span>
+            <span class="event-place kr">합정 웨딩시그니처 4F 아너스홀</span>
+        </div>
+    </div>
+</section>
+
+<!-- 편지 섹션 -->
+<section class="letter">
+    <div class="header">
+        <img class="header-deco" src="static/assets/images/letter-deco.svg" alt="letter header deco" loading="lazy"/>
+        <h2 class="title kr">2026.08.08</h2>
+        <p class="sub-title kr">두 사람의 결혼식에 초대합니다.</p>
+    </div>
+
+    <h1 class="invitation-header">I N V I T A T I O N</h1>
+
+    <div class="letter-container">
+        <p class="letter kr">
+            8년의 시간,<br>그리고 또 하나의 8이 겹치는 날.<br><br>지구 반대편에서 운명처럼 만나<br>2026년 8월 8일, 사랑의 무한대(∞)를 약속합니다.<br><br>지금처럼, 앞으로도<br>서로의 가장 큰 행복으로 함께하겠습니다.
+        </p>
+
+        <div class="family-description kr">
+                <span class="groom-line">
+                    배갑천 <span class="name-divider">•</span> 이선미 의 장남 <span
+                        class="groom-name">기훈</span>
+                </span>
+            <span class="bride-line">
+                    김종선 <span class="name-divider">•</span> 박선영 의 장녀 <span
+                    class="bride-name">슬비</span>
+                </span>
+        </div>
+    </div>
+</section>
+
+<img class="letter-bottom" src="static/assets/images/letter-bottom.webp" alt="letter bottom" loading="lazy"/>
+
+<!-- 캘린더 섹션 -->
+<section class="calendar">
+    <img class="calendar-deco" src="static/assets/images/calendar.webp" alt="calendar deco" loading="lazy"/>
+
+    <div class="d-day-display">
+        <table class="countdown-table">
+            <tr class="countdown-labels">
+                <td>DAYS</td>
+                <td class="separator-cell"></td>
+                <td>HOUR</td>
+                <td class="separator-cell"></td>
+                <td>MIN</td>
+                <td class="separator-cell"></td>
+                <td>SEC</td>
+            </tr>
+            <tr class="countdown-values">
+                <td id="countdown-days">0</td>
+                <td class="countdown-separator">:</td>
+                <td id="countdown-hours">0</td>
+                <td class="countdown-separator">:</td>
+                <td id="countdown-minutes">0</td>
+                <td class="countdown-separator">:</td>
+                <td id="countdown-seconds">0</td>
+            </tr>
+        </table>
+        <p class="countdown-message" data-template="기훈 ♥ 슬비의 결혼식이 {days}일 남았습니다">기훈 ♥ 슬비의 결혼식이 <span id="d-day-text">0일</span> 남았습니다</p>
+    </div>
+
+    <div class="calendar-buttons">
+        <button class="calendar-btn google-calendar" onclick="addToGoogleCalendar()">
+            <i data-lucide="plus"></i>
+            Google Calendar에 추가
+        </button>
+    </div>
+</section>
+
+<!-- 갤러리 섹션 -->
+<section class="gallery">
+    <p class="snap-subtitle-en">GALLERY</p>
+    <div class="header">
+        <h2 class="title kr">웨딩 갤러리</h2>
+    </div>
+
+    <!-- 사진 그리드 (3열) -->
+    <div class="photo-grid" id="photo-grid">
+        <!-- 사진들이 JavaScript로 동적 로딩됩니다 -->
+    </div>
+</section>
+
+<!-- 갤러리 라이트박스 -->
+<div class="gallery-lightbox-overlay" id="gallery-lightbox" style="display: none;">
+    <div class="gallery-lightbox-container">
+        <button class="gallery-lightbox-close" onclick="closeGalleryLightbox()">
+            <i data-lucide="x"></i>
+        </button>
+        <button class="gallery-lightbox-nav prev" onclick="navigateLightbox(-1)">
+            <i data-lucide="chevron-left"></i>
+        </button>
+        <img class="gallery-lightbox-image" id="lightbox-image" src="" alt="Gallery image"/>
+        <button class="gallery-lightbox-nav next" onclick="navigateLightbox(1)">
+            <i data-lucide="chevron-right"></i>
+        </button>
+    </div>
+</div>
+
+<!-- 유튜브 비디오 섹션 (임시 주석처리)
+<section class="video-section">
+    <p class="snap-subtitle-en">OUR STORY</p>
+
+    <div class="header">
+        <h2 class="title kr">우리의 이야기</h2>
+        <p class="subtitle">두 사람의 소중한 순간들</p>
+    </div>
+
+    <div class="video-container">
+        <iframe
+            src="https://www.youtube.com/embed/8_SPFgmSVUo?si=anx_MWLAjy9xIa1K"
+            title="YouTube video player"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            loading="lazy"
+            allowfullscreen>
+        </iframe>
+    </div>
+</section>
+-->
+
+<!-- 위치 섹션 -->
+<section class="location">
+    <p class="snap-subtitle-en">INFORMATION</p>
+
+    <div class="header">
+        <h2 class="title kr">예식정보 및 안내 사항</h2>
+    </div>
+
+    <!-- 교통 수단 -->
+    <div class="location-content active" id="transport-content">
+        <p class="address-text">합정 웨딩시그니처 4F 아너스홀</p>
+
+        <div class="map-image-container" onclick="openMapLightbox()">
+            <img src="static/assets/images/wedding-signature.webp" alt="합정 웨딩시그니처 4F 아너스홀 위치 안내도" class="map-image"
+                 loading="lazy"/>
+            <div class="map-click-hint">
+                <span>클릭하면 크게 볼 수 있습니다</span>
+            </div>
+        </div>
+
+        <div class="map-buttons-container">
+            <button class="map-button" onclick="window.open('https://map.naver.com/v5/search/%ED%95%A9%EC%A0%95%20%EC%9B%A8%EB%94%A9%EC%8B%9C%EA%B7%B8%EB%8B%88%EC%B2%98', '_blank')">
+                <img src="static/assets/images/naver_Icon.webp" alt="네이버 지도 아이콘" class="map-icon" loading="lazy"/>
+                <span>네이버맵</span>
+            </button>
+            <button class="map-button" onclick="window.open('https://map.kakao.com/?q=%ED%95%A9%EC%A0%95%20%EC%9B%A8%EB%94%A9%EC%8B%9C%EA%B7%B8%EB%8B%88%EC%B2%98', '_blank')">
+                <img src="static/assets/images/kakaomap-icon.webp" alt="카카오맵 아이콘" class="map-icon" loading="lazy"/>
+                <span>카카오맵</span>
+            </button>
+            <button class="map-button" onclick="window.open('https://www.google.com/maps/search/?api=1&query=%ED%95%A9%EC%A0%95%20%EC%9B%A8%EB%94%A9%EC%8B%9C%EA%B7%B8%EB%8B%88%EC%B2%98', '_blank')">
+                <img src="static/assets/images/tmap_icon.webp" alt="티맵 지도 아이콘" class="map-icon" loading="lazy"/>
+                <span>티맵</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- 지도 라이트박스 -->
+    <div class="map-lightbox-overlay" id="map-lightbox" style="display: none;">
+        <div class="map-lightbox-container">
+            <img class="map-lightbox-image" src="static/assets/images/wedding-signature.webp"
+                 alt="합정 웨딩시그니처 4F 아너스홀 위치 안내도 (확대)"/>
+            <button class="map-lightbox-close" onclick="closeMapLightbox()">
+                <i data-lucide="x"></i>
+            </button>
+            <div class="map-lightbox-info">
+                <span>합정 웨딩시그니처 4F 아너스홀 찾아오는 길</span>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- 계좌 정보 섹션 -->
+<section class="account-trapezoid">
+    <p class="snap-subtitle-en">ACCOUNT</p>
+
+    <h2 class="account-title">마음 전하기</h2>
+
+    <!-- 아코디언 컨테이너 -->
+    <div class="account-accordion-container">
+        <!-- 신랑 측 아코디언 -->
+        <div class="account-accordion-item" id="groom-accordion">
+            <button class="account-accordion-button" onclick="toggleAccountAccordion('groom')">
+                <span id="groom-button-text">신랑 측 계좌번호</span>
+                <i data-lucide="chevron-down" class="accordion-icon"></i>
+            </button>
+            <div class="account-accordion-content" id="groom-cards">
+                <!-- 동적으로 생성됩니다 -->
+            </div>
+        </div>
+
+        <!-- 신부 측 아코디언 -->
+        <div class="account-accordion-item" id="bride-accordion">
+            <button class="account-accordion-button" onclick="toggleAccountAccordion('bride')">
+                <span id="bride-button-text">신부 측 계좌번호</span>
+                <i data-lucide="chevron-down" class="accordion-icon"></i>
+            </button>
+            <div class="account-accordion-content" id="bride-cards">
+                <!-- 동적으로 생성됩니다 -->
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Snaps 섹션 -->
+<section class="snaps-section">
+    <div class="header">
+        <!-- 영문 타이틀 -->
+        <p class="snap-subtitle-en">CAPTURE OUR MOMENTS</p>
+
+        <!-- 메인 타이틀 -->
+        <h2 class="title kr">Snaps</h2>
+
+        <!-- 설명 텍스트 -->
+        <div class="snap-description">
+            
+            <p>신랑신부의 행복한 순간을 담아주세요.</p>
+            
+            <p>예식 당일, 아래 버튼을 통해 사진을 올려주세요.</p>
+            
+            <p>많은 참여 부탁드려요!</p>
+            
+        </div>
+    </div>
+
+    <!-- 업로드 버튼 -->
+    <div class="snap-upload-container">
+        <input type="file" id="snap-upload-input" accept="image/*,video/*" multiple style="display: none;" />
+        <button class="snap-upload-button" onclick="openSnapUpload()">
+            사진 업로드
+        </button>
+        <!-- 업로드 가능 시간 안내 -->
+        <p class="snap-upload-notice" id="snap-upload-notice" style="margin-top: 12px; font-size: 14px; color: #888; text-align: center; display: none;">
+            2026-08-08 12:00부터<br/>업로드 가능합니다.
+        </p>
+    </div>
+</section>
+
+<!-- Snaps 업로드 모달 -->
+<div class="snap-upload-modal" id="snap-upload-modal">
+    <div class="snap-upload-modal-content">
+        <h3>사진 업로드 중...</h3>
+        <div class="snap-upload-progress-bar">
+            <div class="snap-upload-progress-fill" id="snap-upload-progress"></div>
+        </div>
+        <div class="snap-upload-status" id="snap-upload-status">
+            업로드 준비 중...
+        </div>
+        <button class="snap-upload-close-btn" id="snap-upload-close" onclick="closeSnapUploadModal()" style="display: none;">
+            확인
+        </button>
+    </div>
+</div>
+
+<!-- 공유 섹션 -->
+<section class="share-section">
+    <!-- 배경 이미지 -->
+    <div class="share-image-container">
+        <img src="static/assets/images/couple-bridge.webp" alt="커플 이미지" loading="lazy"/>
+
+        <!-- 상단 흰색 그라데이션 -->
+        <div class="share-gradient-top"></div>
+
+        <!-- 하단 흰색 그라데이션 -->
+        <div class="share-gradient-bottom"></div>
+
+        <!-- 텍스트 오버레이 -->
+        <div class="share-text-overlay">
+            <p class="share-message">저희의 새로운 시작을<br>함께 해주셔서 감사합니다.</p>
+        </div>
+    </div>
+
+    <!-- 공유 버튼 (이미지 아래) -->
+    <div class="share-button-container">
+        <button class="share-kakao-button" onclick="shareToKakao()">
+            <img src="static/assets/images/kakaotalk.webp" alt="카카오톡"/>
+            <span>카카오톡으로 초대장 보내기</span>
+        </button>
+    </div>
+
+</section>
+
+<!-- BGM 알림 배너 (스피커 포함) -->
+<div class="bgm-notification-banner" id="bgm-notification-banner">
+    <span class="bgm-notification-text">배경음악이 준비되었습니다</span>
+    <div class="bgm-speaker-control" id="bgm-speaker-control">
+        <button class="bgm-speaker-button" id="bgm-speaker-button" onclick="toggleMusic()">
+            <i data-lucide="volume-2" id="bgm-speaker-icon"></i>
+        </button>
+    </div>
+</div>
+
+<!-- 토스트 메시지 -->
+<div class="share-toast" id="share-toast" style="display: none;">
+    <span id="toast-message"></span>
+</div>
+
+<!-- 계좌 토스트 메시지 -->
+<div class="account-toast" id="account-toast"></div>
+
+<!-- JavaScript -->
+<script>
+    // 서버에서 전달된 환경변수
+    window.KAKAO_APP_KEY = '%VITE_KAKAO_APP_KEY%';
+
+    let weddingConfig;
+
+    // Config 데이터 로드 및 계좌 섹션 초기화
+    function initializeAccountSection() {
+        const configElement = document.getElementById('config-data');
+        if (configElement) {
+            weddingConfig = JSON.parse(configElement.textContent);
+
+            // 버튼 텍스트 설정
+            document.getElementById('groom-button-text').textContent = weddingConfig.content.account_section.groom_button;
+            document.getElementById('bride-button-text').textContent = weddingConfig.content.account_section.bride_button;
+
+            // 계좌 카드 렌더링
+            renderAccountCards('groom');
+            renderAccountCards('bride');
+
+            // 아코디언 및 탭 초기화
+            setTimeout(() => {
+                initAccountAccordion();
+                initLocationTabs();
+            }, 100);
+        }
+    }
+
+    // 계좌 카드 렌더링
+    function renderAccountCards(type) {
+        const container = document.getElementById(`${type}-cards`);
+        const accounts = weddingConfig.accounts[type];
+        const accountConfig = weddingConfig.content.account_section;
+        const kakaotalkIcon = weddingConfig.assets.kakaotalk_icon;
+
+        container.innerHTML = accounts.map(account => `
+            <div class="account-card">
+                <div class="account-card-name">${account.name}</div>
+                <div class="account-card-info">
+                    <div class="account-card-bank-row">
+                        <div class="account-card-bank-info">
+                            <div class="account-card-bank-name">${account.bank}</div>
+                            <div class="account-card-number">${account.number}</div>
+                        </div>
+                        <button class="account-card-copy-button" onclick="copyAccountNumber('${account.number}')">
+                            ${accountConfig.copy_button_text}
+                        </button>
+                    </div>
+                </div>
+                ${account.kakaopay_url ? `
+                    <button class="account-kakaopay-button" onclick="openKakaoPay('${account.kakaopay_url}')">
+                        <span class="kakaopay-button-text">${accountConfig.kakaopay_button_text}</span>
+                        <img src="${kakaotalkIcon}" alt="${accountConfig.kakaopay_alt_text}" class="kakaopay-button-icon" />
+                    </button>
+                ` : ''}
+            </div>
+        `).join('');
+    }
+
+    // 아코디언 토글 함수
+    function toggleAccountAccordion(type) {
+        const accordionItem = document.getElementById(`${type}-accordion`);
+        const content = document.getElementById(`${type}-cards`);
+        const button = accordionItem.querySelector('.account-accordion-button');
+
+        if (accordionItem.classList.contains('active')) {
+            // 닫기
+            accordionItem.classList.remove('active');
+            content.style.maxHeight = null;
+        } else {
+            // 열기
+            accordionItem.classList.add('active');
+            content.style.maxHeight = content.scrollHeight + 'px';
+        }
+    }
+
+    // 아코디언 초기화 (닫힌 상태로 시작)
+    function initAccountAccordion() {
+        document.querySelectorAll('.account-accordion-content').forEach(content => {
+            content.style.maxHeight = null;
+        });
+    }
+
+    // 계좌번호 복사 함수
+    async function copyAccountNumber(accountNumber) {
+        if (!weddingConfig) return;
+
+        const accountConfig = weddingConfig.content.account_section;
+
+        try {
+            if (navigator.clipboard && window.isSecureContext) {
+                await navigator.clipboard.writeText(accountNumber);
+            } else {
+                const textArea = document.createElement('textarea');
+                textArea.value = accountNumber;
+                textArea.style.position = 'fixed';
+                textArea.style.opacity = '0';
+                document.body.appendChild(textArea);
+                textArea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textArea);
+            }
+            showAccountToast(accountConfig.copy_success_message);
+        } catch (error) {
+            console.error('복사 실패:', error);
+            showAccountToast(accountConfig.copy_error_message);
+        }
+    }
+
+    // 카카오페이 링크 열기
+    function openKakaoPay(url) {
+        window.open(url, '_blank');
+    }
+
+    // 계좌 토스트 메시지 표시
+    function showAccountToast(message) {
+        const toast = document.getElementById('account-toast');
+        toast.textContent = message;
+        toast.style.display = 'block';
+
+        setTimeout(() => {
+            toast.style.display = 'none';
+        }, 3000);
+    }
+
+    // 하위 호환성을 위한 함수들
+    function copyAccount(accountNumber) {
+        copyAccountNumber(accountNumber);
+    }
+
+    // Location 탭 전환 함수
+    let currentLocationTab = 'transport';
+    function switchLocationTab(type) {
+        if (type === currentLocationTab) return;
+
+        // 모든 탭의 active 클래스 제거
+        document.querySelectorAll('.location-tab').forEach(tab => {
+            tab.classList.remove('active');
+        });
+
+        // 모든 콘텐츠 숨기기
+        document.querySelectorAll('.location-content').forEach(content => {
+            content.classList.remove('active');
+            content.style.display = 'none';
+        });
+
+        // 선택된 콘텐츠 표시
+        const contentId = type + '-content';
+        const selectedContent = document.getElementById(contentId);
+        if (selectedContent) {
+            selectedContent.style.display = 'block';
+            selectedContent.classList.add('active');
+        }
+
+        // 선택된 탭 활성화
+        const selectedTab = Array.from(document.querySelectorAll('.location-tab')).find(tab =>
+            tab.getAttribute('onclick').includes(type)
+        );
+        if (selectedTab) {
+            selectedTab.classList.add('active');
+            updateLocationTabIndicator(selectedTab);
+        }
+
+        currentLocationTab = type;
+    }
+
+    // Location 탭 인디케이터 위치 업데이트
+    function updateLocationTabIndicator(activeTab) {
+        const indicator = document.getElementById('location-tab-indicator');
+        if (!indicator || !activeTab) return;
+
+        const tabsContainer = activeTab.parentElement;
+        const containerRect = tabsContainer.getBoundingClientRect();
+        const tabRect = activeTab.getBoundingClientRect();
+
+        indicator.style.width = `${tabRect.width}px`;
+        indicator.style.transform = `translateX(${tabRect.left - containerRect.left - parseFloat(getComputedStyle(tabsContainer).paddingLeft)}px)`;
+    }
+
+    // Location 탭 초기화
+    function initLocationTabs() {
+        const activeTab = document.querySelector('.location-tab.active');
+        if (activeTab) {
+            updateLocationTabIndicator(activeTab);
+        }
+    }
+
+    // 윈도우 리사이즈 시 인디케이터 위치 재조정
+    window.addEventListener('resize', () => {
+        const activeLocationTab = document.querySelector('.location-tab.active');
+        if (activeLocationTab) {
+            updateLocationTabIndicator(activeLocationTab);
+        }
+
+        // 아코디언 높이 재조정
+        document.querySelectorAll('.account-accordion-item.active').forEach(item => {
+            const content = item.querySelector('.account-accordion-content');
+            if (content) {
+                content.style.maxHeight = content.scrollHeight + 'px';
+            }
+        });
+    });
+</script>
+    <script src="static/js/vara.min.js"></script>
+    <script src="static/js/animations.js"></script>
+<script>
+    window.KAKAO_APP_KEY = "%VITE_KAKAO_APP_KEY%";
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+    window.SUPABASE_URL = '%VITE_SUPABASE_URL%';
+    window.SUPABASE_PUBLISHABLE_KEY = '%VITE_SUPABASE_PUBLISHABLE_KEY%';
+</script>
+<script src="static/js/main.js"></script>
+<script>
+    // 함수를 먼저 정의! (Lucide 로드 전에)
+    function initializeLucideAndPage() {
+        console.log('✅ Lucide 로드 완료!');
+
+        // Lucide 아이콘 초기화
+        if (typeof lucide !== 'undefined') {
+            lucide.createIcons();
+        }
+
+        // 페이지 초기화
+        initializeAccountSection();
+
+        if (typeof initializePage === 'function') {
+            initializePage();
+        } else {
+            setTimeout(() => {
+                if (typeof initializePage === 'function') {
+                    initializePage();
+                }
+            }, 100);
+        }
+    }
+</script>
+
+<!-- 함수 정의 후에 Lucide 스크립트 로드 - defer로 비동기 로딩 최적화 -->
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js" defer onload="initializeLucideAndPage()"></script>
+
+<!-- 참석 의사 전달 안내 모달 -->
+<div class="attendance-notice-modal" id="attendance-notice-modal" style="display: none;">
+    <div class="attendance-notice-content">
+        <button class="attendance-notice-close" onclick="closeAttendanceNoticeModal()">
+            <i data-lucide="x"></i>
+        </button>
+        <h2 class="attendance-notice-title">참석 의사 전달</h2>
+
+        <p class="attendance-notice-description">
+            특별한 날 축하의 마음으로 참석해주시는<br>모든 분들을 한 분 한 분<br>더욱 귀하게 모실 수 있도록,<br>아래 버튼으로 신랑 & 신부에게<br>꼭 참석여부 전달을 부탁드립니다.
+        </p>
+
+        <div class="attendance-notice-divider"></div>
+
+        <div class="attendance-notice-info">
+            <div class="info-item">
+                <i data-lucide="heart"></i>
+                <span><strong>신랑 배기훈 & 신부 김슬비</strong></span>
+            </div>
+            <div class="info-item">
+                <i data-lucide="calendar"></i>
+                <span>2026년 08월 08일 토, 오후 2시</span>
+            </div>
+            <div class="info-item">
+                <i data-lucide="map-pin"></i>
+                <span>합정 웨딩시그니처 4F 아너스홀 </span>
+            </div>
+        </div>
+
+        <div class="attendance-notice-buttons">
+            <button class="attendance-notice-btn primary" onclick="openRSVPFromNotice()">
+                <i data-lucide="bookmark"></i>
+                <span>참석 의사 전달하기</span>
+            </button>
+            <button class="attendance-notice-btn secondary" onclick="hideAttendanceNoticeForToday()">
+                <i data-lucide="check"></i>
+                <span>오늘 하루 보지 않기</span>
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- RSVP 모달 -->
+<div class="form-modal" id="rsvp-modal" style="display: none;">
+    <div class="form-modal-content">
+        <button class="form-modal-close" onclick="closeRSVPModal()">
+            <i data-lucide="x"></i>
+        </button>
+
+        <div class="form-modal-header">
+            <h2 class="form-modal-title">참석 의사 전달</h2>
+        </div>
+
+        <form id="rsvp-modal-form" onsubmit="submitRSVP(event); return false;">
+            <!-- 참석하실 수 있나요? -->
+            <div class="form-group">
+                <label class="form-label">참석하실 수 있나요? <span class="required">*</span></label>
+                <div class="button-group">
+                    <label class="option-btn">
+                        <input type="radio" name="can-attend" value="참석할게요" required style="display: none;">
+                        참석할게요
+                    </label>
+                    <label class="option-btn">
+                        <input type="radio" name="can-attend" value="참석이 어려워요" required style="display: none;">
+                        참석이 어려워요
+                    </label>
+                </div>
+            </div>
+
+            <!-- 어느 분의 하객이신가요? -->
+            <div class="form-group">
+                <label class="form-label">어느 분의 하객이신가요? <span class="required">*</span></label>
+                <div class="button-group">
+                    <label class="option-btn">
+                        <input type="radio" name="which-side" value="신랑측" required style="display: none;">
+                        신랑측
+                    </label>
+                    <label class="option-btn">
+                        <input type="radio" name="which-side" value="신부측" required style="display: none;">
+                        신부측
+                    </label>
+                </div>
+            </div>
+
+            <!-- 성함 -->
+            <div class="form-group">
+                <label for="rsvp-guest-name" class="form-label">성함 <span class="required">*</span></label>
+                <input
+                        id="rsvp-guest-name"
+                        name="guest-name"
+                        type="text"
+                        placeholder="(필수) 대표자 한 분의 성함을 입력해 주세요."
+                        class="text-input"
+                        required
+                >
+            </div>
+
+            <!-- 추가인원 -->
+            <div class="form-group">
+                <label for="rsvp-companion-extra" class="form-label">추가인원</label>
+                <div class="extra-count-container">
+                    <span class="extra-prefix">외</span>
+                    <input
+                        id="rsvp-companion-extra"
+                        name="companion-extra"
+                        type="number"
+                        value="0"
+                        min="0"
+                        max="9"
+                        class="extra-count-input"
+                    />
+                    <span class="extra-suffix">명</span>
+                </div>
+            </div>
+
+            <!-- 식사 여부 -->
+            <div class="form-group">
+                <label class="form-label">식사여부 <span class="required">*</span></label>
+                <div class="meal-check-group">
+                    <label class="meal-check-option">
+                        <input type="radio" name="meal-attendance" value="식사 참석" required style="display: none;">
+                        <i data-lucide="circle" class="meal-check-icon checked-icon"></i>
+                        <i data-lucide="circle" class="meal-check-icon unchecked-icon"></i>
+                        <span>식사함</span>
+                    </label>
+                    <label class="meal-check-option">
+                        <input type="radio" name="meal-attendance" value="식사 불참" required style="display: none;">
+                        <i data-lucide="circle" class="meal-check-icon checked-icon"></i>
+                        <i data-lucide="circle" class="meal-check-icon unchecked-icon"></i>
+                        <span>식사안함</span>
+                    </label>
+                </div>
+            </div>
+
+            <!-- 개인정보 수집 및 이용 동의 -->
+            <div class="form-group">
+                <div class="privacy-consent-header">
+                    <label class="form-label privacy-title">개인정보 수집 및 이용 동의(필수)</label>
+                </div>
+                <p class="privacy-description">
+                    참석여부 전달을 위한 개인정보 수집 및 이용에 동의해주세요.<br>항목: 성함, 연락처, 동행인 수
+                </p>
+                <label class="privacy-check-option">
+                    <input type="checkbox" id="privacy-consent" name="privacy-consent" required style="display: none;">
+                    <i data-lucide="square" class="privacy-check-icon unchecked-icon"></i>
+                    <i data-lucide="check-square" class="privacy-check-icon checked-icon"></i>
+                    <span>동의합니다.</span>
+                </label>
+            </div>
+
+            <!-- 연락처 끝자리 -->
+            <div class="form-group">
+                <label for="rsvp-phone-number" class="form-label">연락처 끝자리 (선택)</label>
+                <input
+                        id="rsvp-phone-number"
+                        name="phone-number"
+                        type="text"
+                        placeholder="연락처 끝 4자리 (선택)"
+                        class="text-input"
+                        maxlength="4"
+                >
+            </div>
+
+            <button type="submit" class="submit-btn" id="rsvp-submit-btn">
+                <span id="rsvp-submit-text">제출하기</span>
+            </button>
+        </form>
+    </div>
+</div>
+
+<footer class="footer-section">
+    <div class="footer-content">
+        <!-- 방문자 통계 -->
+        <div class="visitor-stats">
+            <span class="stat-item">
+                <i data-lucide="users"></i>
+                TODAY <strong id="today-count">-</strong>
+            </span>
+            <span class="stat-divider">|</span>
+            <span class="stat-item">
+                TOTAL <strong id="total-count">-</strong>
+            </span>
+        </div>
+
+        <div class="footer-couple">
+            <span class="footer-names en-sacramento">Kihoon & Seulbi</span>
+        </div>
+
+        <div class="footer-date kr">
+            2026. 08. 08
+        </div>
+
+        <div class="footer-divider"></div>
+    </div>
+</footer>
+
+</body>
+</html>
