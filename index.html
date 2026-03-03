@@ -199,7 +199,7 @@
     <div class="location-content active" id="transport-content">
         <p class="address-text">합정 웨딩시그니처 4F 아너스홀</p>
 
-        <div class="map-image-container" onclick="openMapLightbox()">
+        <div class="map-image-container" onclick="openMapLightbox(event)">
             <img src="static/assets/images/wedding-signature.webp" alt="합정 웨딩시그니처 4F 아너스홀 위치 안내도" class="map-image"
                  loading="lazy"/>
             <div class="map-click-hint">
@@ -208,15 +208,15 @@
         </div>
 
         <div class="map-buttons-container">
-            <button class="map-button" onclick="window.open('https://map.naver.com/v5/search/%ED%95%A9%EC%A0%95%20%EC%9B%A8%EB%94%A9%EC%8B%9C%EA%B7%B8%EB%8B%88%EC%B2%98', '_blank')">
+            <button class="map-button" onclick="openExternalMap('https://map.naver.com/v5/search/%ED%95%A9%EC%A0%95%20%EC%9B%A8%EB%94%A9%EC%8B%9C%EA%B7%B8%EB%8B%88%EC%B2%98', event)">
                 <img src="static/assets/images/naver_Icon.webp" alt="네이버 지도 아이콘" class="map-icon" loading="lazy"/>
                 <span>네이버맵</span>
             </button>
-            <button class="map-button" onclick="window.open('https://map.kakao.com/?q=%ED%95%A9%EC%A0%95%20%EC%9B%A8%EB%94%A9%EC%8B%9C%EA%B7%B8%EB%8B%88%EC%B2%98', '_blank')">
+            <button class="map-button" onclick="openExternalMap('https://map.kakao.com/?q=%ED%95%A9%EC%A0%95%20%EC%9B%A8%EB%94%A9%EC%8B%9C%EA%B7%B8%EB%8B%88%EC%B2%98', event)">
                 <img src="static/assets/images/kakaomap-icon.webp" alt="카카오맵 아이콘" class="map-icon" loading="lazy"/>
                 <span>카카오맵</span>
             </button>
-            <button class="map-button" onclick="window.open('https://www.google.com/maps/search/?api=1&query=%ED%95%A9%EC%A0%95%20%EC%9B%A8%EB%94%A9%EC%8B%9C%EA%B7%B8%EB%8B%88%EC%B2%98', '_blank')">
+            <button class="map-button" onclick="openExternalMap('https://www.google.com/maps/search/?api=1&query=%ED%95%A9%EC%A0%95%20%EC%9B%A8%EB%94%A9%EC%8B%9C%EA%B7%B8%EB%8B%88%EC%B2%98', event)">
                 <img src="static/assets/images/tmap_icon.webp" alt="티맵 지도 아이콘" class="map-icon" loading="lazy"/>
                 <span>티맵</span>
             </button>
@@ -228,7 +228,7 @@
         <div class="map-lightbox-container">
             <img class="map-lightbox-image" src="static/assets/images/wedding-signature.webp"
                  alt="합정 웨딩시그니처 4F 아너스홀 위치 안내도 (확대)"/>
-            <button class="map-lightbox-close" onclick="closeMapLightbox()">
+            <button class="map-lightbox-close" onclick="closeMapLightbox(event)">
                 <i data-lucide="x"></i>
             </button>
             <div class="map-lightbox-info">

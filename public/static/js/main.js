@@ -8,6 +8,8 @@ let volume = 0.3;
 let config = null;
 let autoplayPromptShown = false;
 const PHOTO_UPLOAD_ENABLED = false;
+const MAP_LIGHTBOX_HISTORY_KEY = '__map_lightbox_open__';
+let mapLightboxReopenGuardUntil = 0;
 
 function getBasePath() {
     const path = window.location.pathname || '/';
@@ -704,16 +706,70 @@ function saveUserMusicPreferences() {
 }
 
 // 지도 라이트박스
-function openMapLightbox() {
-    const lightbox = document.getElementById('map-lightbox');
-    lightbox.style.display = 'flex';
-    document.body.style.overflow = 'hidden';
+function isMapLightboxState(state) {
+    return Boolean(state && state[MAP_LIGHTBOX_HISTORY_KEY]);
 }
 
-function closeMapLightbox() {
+function openMapLightbox(event) {
+    if (event) {
+        event.preventDefault();
+        event.stopPropagation();
+    }
+
+    if (Date.now() < mapLightboxReopenGuardUntil) return;
+
     const lightbox = document.getElementById('map-lightbox');
+    if (!lightbox) return;
+    if (lightbox.style.display === 'flex') return;
+
+    lightbox.style.display = 'flex';
+    document.body.style.overflow = 'hidden';
+
+    if (!isMapLightboxState(window.history.state)) {
+        const nextState = { ...(window.history.state || {}) };
+        nextState[MAP_LIGHTBOX_HISTORY_KEY] = true;
+        window.history.pushState(nextState, '', window.location.href);
+    }
+}
+
+function closeMapLightbox(event, options = {}) {
+    if (event) {
+        event.preventDefault();
+        event.stopPropagation();
+    }
+
+    const { fromPopState = false } = options;
+    const lightbox = document.getElementById('map-lightbox');
+    if (!lightbox || lightbox.style.display !== 'flex') return;
+
     lightbox.style.display = 'none';
     document.body.style.overflow = '';
+    mapLightboxReopenGuardUntil = Date.now() + 350;
+
+    if (!fromPopState && isMapLightboxState(window.history.state)) {
+        window.history.back();
+    }
+}
+
+function openExternalMap(url, event) {
+    if (event) {
+        event.preventDefault();
+        event.stopPropagation();
+    }
+
+    const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent || '');
+
+    if (isMobile) {
+        window.location.href = url;
+        return;
+    }
+
+    const popup = window.open(url, '_blank', 'noopener,noreferrer');
+    if (popup) {
+        popup.opener = null;
+    } else {
+        window.location.href = url;
+    }
 }
 
 // 주소 복사
@@ -878,7 +934,14 @@ document.addEventListener('click', function(event) {
     const mapLightbox = document.getElementById('map-lightbox');
 
     if (event.target === mapLightbox) {
-        closeMapLightbox();
+        closeMapLightbox(event);
+    }
+});
+
+window.addEventListener('popstate', () => {
+    const mapLightbox = document.getElementById('map-lightbox');
+    if (mapLightbox && mapLightbox.style.display === 'flex') {
+        closeMapLightbox(null, { fromPopState: true });
     }
 });
 
@@ -920,6 +983,7 @@ window.closeGalleryLightbox = closeGalleryLightbox;
 window.navigateLightbox = navigateLightbox;
 window.openMapLightbox = openMapLightbox;
 window.closeMapLightbox = closeMapLightbox;
+window.openExternalMap = openExternalMap;
 window.toggleQnAItem = toggleQnAItem;
 window.toggleMusic = toggleMusic;
 window.copyAddress = copyAddress;
