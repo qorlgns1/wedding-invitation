@@ -400,7 +400,6 @@
         const container = document.getElementById(`${type}-cards`);
         const accounts = weddingConfig.accounts[type];
         const accountConfig = weddingConfig.content.account_section;
-        const kakaotalkIcon = weddingConfig.assets.kakaotalk_icon;
 
         container.innerHTML = accounts.map(account => `
             <div class="account-card">
@@ -416,12 +415,6 @@
                         </button>
                     </div>
                 </div>
-                ${account.kakaopay_url ? `
-                    <button class="account-kakaopay-button" onclick="openKakaoPay('${account.kakaopay_url}')">
-                        <span class="kakaopay-button-text">${accountConfig.kakaopay_button_text}</span>
-                        <img src="${kakaotalkIcon}" alt="${accountConfig.kakaopay_alt_text}" class="kakaopay-button-icon" />
-                    </button>
-                ` : ''}
             </div>
         `).join('');
     }
@@ -474,11 +467,6 @@
             console.error('복사 실패:', error);
             showAccountToast(accountConfig.copy_error_message);
         }
-    }
-
-    // 카카오페이 링크 열기
-    function openKakaoPay(url) {
-        window.open(url, '_blank');
     }
 
     // 계좌 토스트 메시지 표시
