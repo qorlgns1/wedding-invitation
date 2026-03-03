@@ -1,11 +1,10 @@
-/* Node + Supabase migration overrides */
+/* Node deployment overrides */
 
 /* Scope trimmed for this deployment */
 .chatbot-wrapper,
 .snaps-section,
 .video-section,
-#snap-upload-modal,
-#attendance-notice-modal {
+#snap-upload-modal {
   display: none !important;
 }
 

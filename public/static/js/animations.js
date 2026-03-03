@@ -383,15 +383,12 @@ class WeddingAnimationManager {
                         
                         // 3. 페이드아웃이 얼추 끝날 때쯤(0.8초 후) 오버레이 제거 및 모달 표시
                         setTimeout(() => {
-                            console.log('오버레이 제거 및 모달 표시');
+                            console.log('오버레이 제거');
                             if(introOverlay) {
                                 introOverlay.style.display = 'none';
                                 document.body.style.overflow = '';
                                 document.body.classList.remove('intro-active'); // 오프닝 상태 해제
                                 this.startMainAnimations();
-                                
-                                // 페이드아웃 완료 후 모달 표시
-                        this.showAttendanceModal();
                             }
                             
                         }, 800); // 대기 시간 단축 (1500 -> 800)
@@ -418,7 +415,6 @@ class WeddingAnimationManager {
                     if (!this.scrollElements.length) {
                         this.startMainAnimations();
                     }
-                    this.showAttendanceModal();
                 }
             }, 15000); // 15초 타임아웃
         };
@@ -494,40 +490,6 @@ class WeddingAnimationManager {
         console.log('메인 애니메이션 초기화 완료');
     }
 
-    // 참석 의사 전달 모달 표시
-    showAttendanceModal() {
-        // 오늘 하루 보지 않기가 설정되어 있는지 확인
-        const hideUntil = localStorage.getItem('hideAttendanceNoticeUntil');
-        const now = new Date().getTime();
-
-        if (hideUntil && now < parseInt(hideUntil)) {
-            console.log('참석 의사 전달 모달: 오늘 하루 보지 않기 설정됨');
-            return;
-        }
-
-        // 모달 요소 가져오기
-        const modal = document.getElementById('attendance-notice-modal');
-        if (!modal) {
-            console.warn('참석 의사 전달 모달을 찾을 수 없습니다.');
-            return;
-        }
-
-        // 이미 모달이 표시되어 있으면 중복 실행 방지
-        if (modal.style.display === 'flex') {
-            console.log('참석 의사 전달 모달: 이미 표시됨 (중복 호출 방지)');
-            return;
-        }
-
-        // 모달 표시
-        modal.style.display = 'flex';
-        console.log('참석 의사 전달 모달 표시됨');
-
-        // Lucide 아이콘 재초기화
-        if (typeof lucide !== 'undefined') {
-            lucide.createIcons();
-        }
-    }
-
     // 스크롤 기반 애니메이션 초기화
     initScrollAnimations() {
         const animationSelectors = [
@@ -539,15 +501,8 @@ class WeddingAnimationManager {
             // 기타 섹션들
             '.calendar .d-day-display',
             '.calendar .calendar-buttons',
-            '.rsvp-section .header',
-            '.rsvp-section .couple-names',
-            '.rsvp-section .wedding-info',
-            '.rsvp-section .rsvp-button',
             '.gallery .header',
             '.gallery .photo-grid',
-            '.guestbook-section .header',
-            '.guestbook-section .guestbook-preview',
-            '.guestbook-section .messages-section',
             '.qna-section .header',
             '.qna-section .accordion-container',
             '.location .title',
@@ -621,7 +576,6 @@ class WeddingAnimationManager {
         if (className.includes('photo-grid')) return 'fade-in-up';
         if (className.includes('map-image-container')) return 'fade-in-scale';
         if (className.includes('wedding-info')) return 'fade-in-up';
-        if (className.includes('rsvp-button')) return 'fade-in-scale';
         if (className.includes('venue')) return 'fade-in-up';
         if (className.includes('address-text')) return 'fade-in-up';
         if (className.includes('video-container')) return 'fade-in-scale';

@@ -33,8 +33,6 @@ jobs:
 
       - name: Build
         env:
-          VITE_SUPABASE_URL: ${{ vars.VITE_SUPABASE_URL }}
-          VITE_SUPABASE_PUBLISHABLE_KEY: ${{ vars.VITE_SUPABASE_PUBLISHABLE_KEY }}
           VITE_KAKAO_APP_KEY: ${{ vars.VITE_KAKAO_APP_KEY }}
         run: npm run build
 

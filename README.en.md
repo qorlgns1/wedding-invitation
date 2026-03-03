@@ -1,21 +1,17 @@
 **English** | [한국어](./README.md)
 
-# Mobile Wedding Invitation (Node + GitHub Pages + Supabase)
+# Mobile Wedding Invitation (Node + GitHub Pages)
 
-This project has been migrated from FastAPI to a **Node (Vite) static app + Supabase** architecture.
+This project has been migrated from FastAPI to a **Node (Vite) static app**.
 
 ## What changed
 
 - Deployment: GitHub Pages (`/<repo>/`)
 - Runtime: Node + Vite (vanilla JS)
-- Kept dynamic features: RSVP / Guestbook
-- Removed features: AI chatbot / photo upload / admin panel
-- Operations: Supabase Dashboard
 
 ## Stack
 
 - Frontend: Vite, Vanilla JavaScript
-- Backendless: Supabase (Postgres, RLS, RPC)
 - Hosting: GitHub Pages + GitHub Actions
 
 ## Quick start
@@ -29,25 +25,17 @@ cp .env.example .env
 
 ### 2) Configure env
 
-Set these in `.env`:
+Set this in `.env`:
 
-- `VITE_SUPABASE_URL`
-- `VITE_SUPABASE_PUBLISHABLE_KEY`
 - `VITE_KAKAO_APP_KEY` (optional)
 
-### 3) Apply Supabase schema
-
-Run SQL from:
-
-- [`supabase/schema.sql`](./supabase/schema.sql)
-
-### 4) Run locally
+### 3) Run locally
 
 ```bash
 npm run dev
 ```
 
-### 5) Build check
+### 4) Build check
 
 ```bash
 npm run build
@@ -58,13 +46,11 @@ npm run preview
 
 Auto deploy is configured via `.github/workflows/pages.yml` on `main` pushes.
 
-Required repository variables:
+Repository variable:
 
-- `VITE_SUPABASE_URL`
-- `VITE_SUPABASE_PUBLISHABLE_KEY`
 - `VITE_KAKAO_APP_KEY` (optional)
 
-See [`docs/DEPLOYMENT.md`](./docs/DEPLOYMENT.md) for full details.
+See [`docs/DEPLOYMENT.md`](./docs/DEPLOYMENT.md) for details.
 
 ## Project layout
 
@@ -74,13 +60,6 @@ wedding-invitation/
 ├── config/config.json
 ├── public/
 │   └── static/
-├── src/
-│   ├── lib/
-│   ├── services/
-│   ├── main.js
-│   └── styles.css
-├── supabase/
-│   └── schema.sql
 ├── index.html
 ├── package.json
 └── vite.config.js

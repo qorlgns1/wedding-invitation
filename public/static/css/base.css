@@ -86,9 +86,6 @@ section.gallery,
 section.calendar,
 section.location,
 section.account-trapezoid,
-section.rsvp-section,
-section.qna-section,
-section.guestbook-section,
 section.video-section,
 section.share-section {
     max-width: var(--content-max-width);

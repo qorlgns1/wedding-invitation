@@ -1,20 +1,13 @@
 // 전역 변수들
 let photos = [];
 let currentLightboxIndex = 0;
-let guestbookEntries = [];
-let currentMessagePage = 1;
-const messagesPerPage = 10; // 10개씩 로딩
-let totalGuestbookPages = 1;
-let isLoadingGuestbook = false;
 let audio = null;
 let isPlaying = false;
 let isMuted = false;
 let volume = 0.3;
 let config = null;
 let autoplayPromptShown = false;
-let supabaseClient = null;
 const PHOTO_UPLOAD_ENABLED = false;
-let supabaseMissingNotified = false;
 
 function getBasePath() {
     const path = window.location.pathname || '/';
@@ -48,37 +41,6 @@ function normalizeConfigPaths(value) {
     }
 }
 
-function getSupabaseClient() {
-    if (supabaseClient) return supabaseClient;
-
-    const url = window.SUPABASE_URL;
-    const key = window.SUPABASE_PUBLISHABLE_KEY;
-    if (!window.supabase || !window.supabase.createClient || !url || !key) return null;
-    if (String(url).includes('your-project-ref') || String(key).includes('your_supabase_publishable_key')) return null;
-
-    try {
-        supabaseClient = window.supabase.createClient(url, key, {
-            auth: {
-                persistSession: false,
-                autoRefreshToken: false,
-            },
-        });
-    } catch (error) {
-        console.error('Supabase client init failed:', error);
-        supabaseClient = null;
-    }
-
-    return supabaseClient;
-}
-
-function notifySupabaseIfMissing() {
-    if (getSupabaseClient() || supabaseMissingNotified) return;
-    supabaseMissingNotified = true;
-    setTimeout(() => {
-        showToast('Supabase 키를 설정하면 RSVP 기능이 활성화됩니다.');
-    }, 1200);
-}
-
 // 성능 최적화: Intersection Observer로 이미지 지연 로딩
 let imageObserver = null;
 
@@ -93,31 +55,9 @@ function loadConfig() {
     }
 }
 
-// ==================== 동행인 수 컨트롤 ====================
-function increaseCompanionCount() {
-    const input = document.getElementById('rsvp-companion-extra');
-    if (!input) return;
-    const currentValue = parseInt(input.value) || 0;
-    if (currentValue < 9) {
-        input.value = currentValue + 1;
-    }
-    setTimeout(reinitializeLucideIcons, 50);
-}
-
-function decreaseCompanionCount() {
-    const input = document.getElementById('rsvp-companion-extra');
-    if (!input) return;
-    const currentValue = parseInt(input.value) || 0;
-    if (currentValue > 0) {
-        input.value = currentValue - 1;
-    }
-    setTimeout(reinitializeLucideIcons, 50);
-}
-
 // 페이지 초기화 - 성능 최적화
 function initializePage() {
     loadConfig();
-    notifySupabaseIfMissing();
     
     // 오프닝 애니메이션 중인지 확인하고 초기 로딩 클래스 관리
     const introOverlay = document.getElementById('intro-animation-overlay');
@@ -142,7 +82,6 @@ function initializePage() {
     // 지연 로딩할 항목들 (오프닝 애니메이션에 집중하기 위해 우선순위 낮춤)
     requestIdleCallback(() => {
         initializeGallery();
-        loadVisitorStats();
         // Kakao SDK는 defer로 로드
         initializeKakaoSDK();
     });
@@ -229,371 +168,7 @@ function ensureLucideIcons() {
 
 // 모달 폼 초기화
 function initializeModalForms() {
-    const rsvpForm = document.getElementById('rsvp-modal-form');
-    if (rsvpForm) {
-        rsvpForm.removeEventListener('submit', submitRSVP);
-        rsvpForm.addEventListener('submit', function(e) {
-            e.preventDefault();
-            e.stopPropagation();
-            submitRSVP(e);
-            return false;
-        });
-    }
-}
-
-// RSVP 라디오 버튼 이벤트 초기화
-function initializeRSVPRadioButtons() {
-    console.log('🔧 RSVP 버튼 이벤트 초기화 시작');
-
-    // 참석 여부 및 신랑/신부측 라디오 버튼
-    const rsvpOptionBtns = document.querySelectorAll('#rsvp-modal .option-btn');
-    console.log(`📍 찾은 option-btn 개수: ${rsvpOptionBtns.length}`);
-
-    rsvpOptionBtns.forEach((btn, index) => {
-        // 기존 이벤트 제거를 위해 clone
-        const newBtn = btn.cloneNode(true);
-        btn.parentNode.replaceChild(newBtn, btn);
-
-        newBtn.addEventListener('click', function(e) {
-            console.log(`🖱️ 버튼 클릭됨 (${index})`);
-            e.preventDefault();
-            e.stopPropagation();
-
-            const radio = this.querySelector('input[type="radio"]');
-            if (!radio) {
-                console.error('❌ 라디오 버튼을 찾을 수 없습니다');
-                return;
-            }
-
-            const groupName = radio.name;
-
-            // 같은 그룹의 모든 버튼 선택 해제
-            document.querySelectorAll(`#rsvp-modal input[name="${groupName}"]`).forEach(r => {
-                const parentBtn = r.closest('.option-btn');
-                if (parentBtn) {
-                    parentBtn.classList.remove('selected');
-                }
-            });
-
-            // 현재 버튼 선택
-            this.classList.add('selected');
-            radio.checked = true;
-
-            console.log(`✅ 선택됨: ${groupName} = ${radio.value}`);
-        });
-    });
-
-    // 식사여부 체크 옵션 이벤트
-    const mealCheckOptions = document.querySelectorAll('#rsvp-modal .meal-check-option');
-    console.log(`📍 찾은 meal-check-option 개수: ${mealCheckOptions.length}`);
-
-    mealCheckOptions.forEach((option, index) => {
-        const newOption = option.cloneNode(true);
-        option.parentNode.replaceChild(newOption, option);
-
-        newOption.addEventListener('click', function(e) {
-            console.log(`🖱️ 식사 옵션 클릭됨 (${index})`);
-            e.preventDefault();
-            e.stopPropagation();
-
-            const radio = this.querySelector('input[type="radio"]');
-            if (!radio) {
-                console.error('❌ 식사 라디오 버튼을 찾을 수 없습니다');
-                return;
-            }
-
-            // 모든 식사 옵션 선택 해제
-            document.querySelectorAll('#rsvp-modal .meal-check-option').forEach(opt => {
-                opt.classList.remove('selected');
-            });
-
-            // 현재 옵션 선택
-            this.classList.add('selected');
-            radio.checked = true;
-
-            setTimeout(() => reinitializeLucideIcons(), 50);
-            console.log(`✅ 식사여부 선택됨: ${radio.value}`);
-        });
-    });
-
-    // 개인정보 동의 체크박스 이벤트
-    const privacyCheckOption = document.querySelector('#rsvp-modal .privacy-check-option');
-    if (privacyCheckOption) {
-        console.log('📍 개인정보 동의 체크박스 찾음');
-        const newPrivacy = privacyCheckOption.cloneNode(true);
-        privacyCheckOption.parentNode.replaceChild(newPrivacy, privacyCheckOption);
-
-        newPrivacy.addEventListener('click', function(e) {
-            console.log('🖱️ 개인정보 동의 클릭됨');
-            e.preventDefault();
-            e.stopPropagation();
-
-            const checkbox = this.querySelector('input[type="checkbox"]');
-            if (!checkbox) {
-                console.error('❌ 체크박스를 찾을 수 없습니다');
-                return;
-            }
-
-            checkbox.checked = !checkbox.checked;
-
-            if (checkbox.checked) {
-                this.classList.add('checked');
-            } else {
-                this.classList.remove('checked');
-            }
-
-            setTimeout(() => reinitializeLucideIcons(), 50);
-            console.log(`✅ 개인정보 동의: ${checkbox.checked}`);
-        });
-    } else {
-        console.error('❌ 개인정보 동의 체크박스를 찾을 수 없습니다');
-    }
-
-    setTimeout(() => reinitializeLucideIcons(), 100);
-    console.log('✅ RSVP 버튼 이벤트 초기화 완료');
-}
-
-// RSVP 모달 열기
-function openRSVPModal() {
-    const modal = document.getElementById('rsvp-modal');
-    modal.style.display = 'flex';
-    document.body.style.overflow = 'hidden';
-
-    const form = document.getElementById('rsvp-modal-form');
-    if (form) {
-        form.reset();
-        const extraInput = document.getElementById('rsvp-companion-extra');
-        if (extraInput) {
-            extraInput.value = 0; // 추가인원은 기본 0
-        }
-        document.querySelectorAll('#rsvp-modal .option-btn').forEach(btn => {
-            btn.classList.remove('selected');
-        });
-        document.querySelectorAll('#rsvp-modal .meal-check-option').forEach(opt => {
-            opt.classList.remove('selected');
-        });
-        const privacyCheck = document.querySelector('#rsvp-modal .privacy-check-option');
-        if (privacyCheck) {
-            privacyCheck.classList.remove('checked');
-        }
-    }
-
-    initializeRSVPRadioButtons();
-
-    setTimeout(reinitializeLucideIcons, 50);
-    setTimeout(reinitializeLucideIcons, 200);
-}
-
-// RSVP 모달 닫기
-function closeRSVPModal() {
-    const modal = document.getElementById('rsvp-modal');
-    modal.style.display = 'none';
-    document.body.style.overflow = '';
-
-    // 모달 닫을 때 BGM 자동 재생
-    if (!isPlaying && audio && audio.readyState >= 2) {
-        tryAutoplay();
-    }
-}
-
-async function submitRSVP(event) {
-    event.preventDefault();
-    event.stopPropagation();
-    event.stopImmediatePropagation();
-
-    const submitBtn = document.getElementById('rsvp-submit-btn');
-    const submitText = document.getElementById('rsvp-submit-text');
-
-    if (submitBtn.disabled) return;
-
-    const formData = new FormData(event.target);
-    const extraCount = parseInt(formData.get('companion-extra')) || 0;
-    const data = {
-        which_side: formData.get('which-side'),
-        can_attend: formData.get('can-attend'),
-        guest_name: formData.get('guest-name'),
-        phone_number: formData.get('phone-number') || '',
-        companion_count: extraCount + 1, // 본인 + 추가인원
-        meal_attendance: formData.get('meal-attendance') || ''
-    };
-
-    console.log('📤 RSVP 제출 데이터:', data);
-
-    if (!data.which_side) {
-        alert('어느 분의 하객인지 선택해주세요.');
-        return;
-    }
-    if (!data.can_attend) {
-        alert('참석 여부를 선택해주세요.');
-        return;
-    }
-    if (!data.guest_name.trim()) {
-        alert('성함을 입력해주세요.');
-        return;
-    }
-    if (!data.meal_attendance) {
-        alert('식사 여부를 선택해주세요.');
-        return;
-    }
-
-    submitBtn.disabled = true;
-    submitText.innerHTML = '<span class="loading-spinner"></span>전송 중...';
-
-    try {
-        const client = getSupabaseClient();
-        if (!client) {
-            throw new Error('Supabase 환경변수가 설정되지 않았습니다.');
-        }
-
-        const { error } = await client.from('rsvp_entries').insert([data]);
-        if (error) {
-            throw new Error(error.message || '제출 실패');
-        }
-
-        console.log('✅ RSVP 제출 성공!');
-        closeRSVPModal();
-        showToast('참석 여부가 성공적으로 전달되었습니다! 💕');
-
-        // RSVP 제출 성공 시 BGM 자동 재생
-        if (!isPlaying && audio && audio.readyState >= 2) {
-            setTimeout(() => {
-                tryAutoplay();
-            }, 500);
-        }
-    } catch (error) {
-        console.error('❌ RSVP 제출 실패:', error);
-        alert(error.message || '제출 중 오류가 발생했습니다. 다시 시도해주세요.');
-    } finally {
-        submitBtn.disabled = false;
-        submitText.textContent = '제출하기';
-    }
-}
-
-// ==================== 방문자 통계 ====================
-async function loadVisitorStats() {
-    const today = document.getElementById('today-count');
-    const total = document.getElementById('total-count');
-    if (today) today.textContent = '-';
-    if (total) total.textContent = '-';
-}
-
-function openGuestbookModal() {
-    const modal = document.getElementById('guestbook-modal');
-    modal.style.display = 'flex';
-    document.body.style.overflow = 'hidden';
-
-    const form = document.getElementById('guestbook-modal-form');
-    if (form) {
-        form.reset();
-        updateGuestbookCharCounter();
-    }
-}
-
-function closeGuestbookModal() {
-    const modal = document.getElementById('guestbook-modal');
-    modal.style.display = 'none';
-    document.body.style.overflow = '';
-}
-
-function updateGuestbookCharCounter() {
-    const textarea = document.getElementById('guestbook-modal-message');
-    const counter = document.getElementById('guestbook-char-counter');
-
-    if (!textarea || !counter) return;
-
-    const currentLength = textarea.value.length;
-    const maxLength = 500;
-    counter.textContent = `${currentLength} / ${maxLength}`;
-
-    if (currentLength > maxLength * 0.9) {
-        counter.className = 'char-counter error';
-    } else if (currentLength > maxLength * 0.8) {
-        counter.className = 'char-counter warning';
-    } else {
-        counter.className = 'char-counter';
-    }
-}
-
-async function submitGuestbook(event) {
-    event.preventDefault();
-    event.stopPropagation();
-    event.stopImmediatePropagation();
-
-    const submitBtn = document.getElementById('guestbook-submit-btn');
-    const submitText = document.getElementById('guestbook-submit-text');
-
-    if (submitBtn.disabled) return;
-
-    const formData = new FormData(event.target);
-    const data = {
-        name: formData.get('name').trim(),
-        message: formData.get('message').trim(),
-        password: formData.get('password').trim()
-    };
-
-    console.log('📤 방명록 제출 데이터:', { name: data.name, message: data.message.substring(0, 50) + '...' });
-
-    if (!data.name) {
-        alert('성함을 입력해주세요.');
-        return;
-    }
-    if (data.name.length > 20) {
-        alert('성함은 20자 이내로 입력해주세요.');
-        return;
-    }
-    if (!data.message) {
-        alert('축하 메시지를 입력해주세요.');
-        return;
-    }
-    if (data.message.length > 500) {
-        alert('메시지는 500자 이내로 입력해주세요.');
-        return;
-    }
-    if (!data.password) {
-        alert('비밀번호를 입력해주세요.');
-        return;
-    }
-    if (data.password.length < 4) {
-        alert('비밀번호는 4자리 이상 입력해주세요.');
-        return;
-    }
-
-    submitBtn.disabled = true;
-    submitText.innerHTML = '<span class="loading-spinner"></span>전송 중...';
-
-    try {
-        const client = getSupabaseClient();
-        if (!client) {
-            throw new Error('Supabase 환경변수가 설정되지 않았습니다.');
-        }
-
-        const { data: result, error } = await client.rpc('guestbook_create', {
-            name: data.name,
-            message: data.message,
-            password_plain: data.password
-        });
-
-        if (error) {
-            throw new Error(error.message || '제출 실패');
-        }
-
-        if (result && result.success === false) {
-            throw new Error(result.error || '제출 실패');
-        }
-
-        console.log('✅ 방명록 제출 성공!');
-        closeGuestbookModal();
-        showToast('축하 메시지가 전달되었습니다! 💝');
-        guestbookEntries = [];
-        currentMessagePage = 1;
-        await initializeGuestbook(1);
-    } catch (error) {
-        console.error('❌ 방명록 제출 실패:', error);
-        alert(error.message || '제출 중 오류가 발생했습니다. 다시 시도해주세요.');
-    } finally {
-        submitBtn.disabled = false;
-        submitText.textContent = '작성 완료';
-    }
+    // 현재 초기화할 모달 폼이 없습니다.
 }
 
 // D-day 계산 - 성능 최적화 (DOM 캐싱 및 변경 시에만 업데이트)
@@ -929,172 +504,6 @@ function toggleQnAItem(id) {
     }
 }
 
-// 방명록 초기화
-async function initializeGuestbook(page = 1) {
-    const loadingElement = document.getElementById('loading-messages');
-    const messageCountElement = document.getElementById('message-count');
-
-    if (!loadingElement || !messageCountElement) {
-        console.log('방명록 요소들을 찾을 수 없습니다. 메인 페이지가 아닐 수 있습니다.');
-        return;
-    }
-
-    if (isLoadingGuestbook) {
-        console.log('이미 방명록을 로딩 중입니다.');
-        return;
-    }
-
-    isLoadingGuestbook = true;
-
-    try {
-        const client = getSupabaseClient();
-        if (!client) {
-            showEmptyGuestbook();
-            return;
-        }
-
-        const from = (page - 1) * messagesPerPage;
-        const to = from + messagesPerPage - 1;
-
-        const { data, error, count } = await client
-            .from('guestbook_public_entries')
-            .select('*', { count: 'exact' })
-            .order('created_at', { ascending: false })
-            .range(from, to);
-
-        if (error) {
-            throw error;
-        }
-
-        const normalizedEntries = (data || []).map(entry => ({
-            id: entry.id,
-            name: entry.name,
-            message: entry.message,
-            timestamp: entry.created_at,
-        }));
-
-        if (page === 1) {
-            guestbookEntries = normalizedEntries;
-        } else {
-            guestbookEntries = [...guestbookEntries, ...normalizedEntries];
-        }
-
-        const totalCount = count || 0;
-        totalGuestbookPages = Math.max(1, Math.ceil(totalCount / messagesPerPage));
-        currentMessagePage = page;
-
-        messageCountElement.textContent = totalCount;
-        renderGuestbookMessages();
-    } catch (error) {
-        console.error('방명록 로딩 실패:', error);
-        showEmptyGuestbook();
-    } finally {
-        if (loadingElement) {
-            loadingElement.style.display = 'none';
-        }
-        isLoadingGuestbook = false;
-    }
-}
-
-function showEmptyGuestbook() {
-    if (!config) return;
-
-    const container = document.getElementById('messages-container');
-    if (!container) return;
-
-    container.innerHTML = `
-        <div class="empty-state">
-            <i data-lucide="message-circle"></i>
-            <p>${config.content.guestbook.empty_message}</p>
-            <span>${config.content.guestbook.empty_subtitle}</span>
-        </div>
-    `;
-    reinitializeLucideIcons();
-}
-
-function renderGuestbookMessages() {
-    const container = document.getElementById('messages-container');
-    if (!container) return;
-
-    if (guestbookEntries.length === 0) {
-        showEmptyGuestbook();
-        return;
-    }
-
-    const MAX_LENGTH = 100; // 최대 글자 수
-
-    const messagesList = container.querySelector('.messages-list') || document.createElement('div');
-    if (!messagesList.parentElement) {
-        messagesList.className = 'messages-list';
-        container.innerHTML = '';
-        container.appendChild(messagesList);
-    }
-
-    messagesList.innerHTML = guestbookEntries.map(entry => {
-        const isLong = entry.message.length > MAX_LENGTH;
-        const truncatedMessage = isLong ? entry.message.substring(0, MAX_LENGTH) + '...' : entry.message;
-
-        return `
-        <div class="message-card" data-id="${entry.id}">
-            <div class="message-header">
-                <div class="message-actions">
-                    <button class="edit-button" onclick="showEditModal(${entry.id})" title="메시지 수정">
-                        ✏️
-                    </button>
-                    <button class="delete-button" onclick="showDeleteModal(${entry.id})" title="메시지 삭제">
-                        ×
-                    </button>
-                </div>
-            </div>
-            <div class="message-content">
-                <p class="message-text" data-full="${isLong ? 'false' : 'true'}">${truncatedMessage}</p>
-                ${isLong ? `
-                    <button class="read-more-btn" onclick="toggleMessageExpand(${entry.id})" data-expanded="false">
-                        더보기
-                    </button>
-                ` : ''}
-            </div>
-            <div class="author-display">- ${entry.name} -</div>
-            <div class="timestamp">${formatTimestamp(entry.timestamp)}</div>
-        </div>
-        `;
-    }).join('');
-
-    // 스크롤 이벤트 리스너 추가
-    setupScrollListener(messagesList);
-}
-
-// 슬라이드 스크롤 이벤트 리스너 설정 - 성능 최적화
-let scrollHandlerRef = null;
-
-function setupScrollListener(messagesList) {
-    // 기존 리스너 제거
-    if (scrollHandlerRef) {
-        messagesList.removeEventListener('scroll', scrollHandlerRef);
-    }
-
-    // debounce된 핸들러 생성
-    scrollHandlerRef = debounce(handleGuestbookScroll, 100);
-
-    // passive: true로 스크롤 성능 최적화
-    messagesList.addEventListener('scroll', scrollHandlerRef, { passive: true });
-}
-
-// 슬라이드 스크롤 핸들러
-function handleGuestbookScroll(event) {
-    const messagesList = event.target;
-    const scrollLeft = messagesList.scrollLeft;
-    const scrollWidth = messagesList.scrollWidth;
-    const clientWidth = messagesList.clientWidth;
-
-    // 스크롤이 끝에서 100px 이내로 근접하면 다음 페이지 로드
-    if (scrollLeft + clientWidth >= scrollWidth - 100) {
-        if (currentMessagePage < totalGuestbookPages && !isLoadingGuestbook) {
-            initializeGuestbook(currentMessagePage + 1);
-        }
-    }
-}
-
 // 범용 debounce 함수
 function debounce(func, wait) {
     let timeout;
@@ -1106,213 +515,6 @@ function debounce(func, wait) {
         clearTimeout(timeout);
         timeout = setTimeout(later, wait);
     };
-}
-
-function toggleMessageExpand(messageId) {
-    const card = document.querySelector(`.message-card[data-id="${messageId}"]`);
-    if (!card) return;
-
-    const messageText = card.querySelector('.message-text');
-    const button = card.querySelector('.read-more-btn');
-    const entry = guestbookEntries.find(e => e.id === messageId);
-
-    if (!entry || !messageText || !button) return;
-
-    const isExpanded = button.getAttribute('data-expanded') === 'true';
-    const MAX_LENGTH = 60;
-
-    if (isExpanded) {
-        // 접기
-        messageText.textContent = entry.message.substring(0, MAX_LENGTH) + '...';
-        button.textContent = '더보기';
-        button.setAttribute('data-expanded', 'false');
-    } else {
-        // 펼치기
-        messageText.textContent = entry.message;
-        button.textContent = '접기';
-        button.setAttribute('data-expanded', 'true');
-    }
-}
-
-
-function formatTimestamp(timestamp) {
-    const date = new Date(timestamp);
-    const now = new Date();
-    const diffTime = now.getTime() - date.getTime();
-    const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
-    const diffHours = Math.floor(diffTime / (1000 * 60 * 60));
-    const diffMinutes = Math.floor(diffTime / (1000 * 60));
-
-    if (diffDays > 0) {
-        return `${diffDays}일 전`;
-    } else if (diffHours > 0) {
-        return `${diffHours}시간 전`;
-    } else if (diffMinutes > 0) {
-        return `${diffMinutes}분 전`;
-    } else {
-        return '방금 전';
-    }
-}
-
-// 수정 모달 표시
-function showEditModal(messageId) {
-    const modal = document.getElementById('edit-modal');
-    const passwordInput = document.getElementById('edit-password-input');
-
-    modal.style.display = 'flex';
-    passwordInput.value = '';
-    passwordInput.focus();
-
-    const confirmBtn = document.getElementById('confirm-edit');
-    confirmBtn.onclick = () => verifyPasswordForEdit(messageId);
-}
-
-async function verifyPasswordForEdit(messageId) {
-    const password = document.getElementById('edit-password-input').value;
-
-    if (!password) {
-        alert('비밀번호를 입력해주세요.');
-        return;
-    }
-
-    try {
-        const client = getSupabaseClient();
-        if (!client) {
-            throw new Error('Supabase 환경변수가 설정되지 않았습니다.');
-        }
-
-        const { data: result, error } = await client.rpc('guestbook_verify', {
-            entry_id: messageId,
-            password_plain: password
-        });
-
-        if (error) {
-            throw new Error(error.message || '비밀번호가 일치하지 않습니다.');
-        }
-
-        if (!result || result.success === false) {
-            throw new Error(result?.error || '비밀번호가 일치하지 않습니다.');
-        }
-
-        closeEditModal();
-        showEditForm(messageId, result.data, password);
-    } catch (error) {
-        console.error('비밀번호 확인 실패:', error);
-        alert(error.message || '비밀번호 확인 중 오류가 발생했습니다.');
-    }
-}
-
-function showEditForm(messageId, data, password) {
-    const modal = document.getElementById('edit-form-modal');
-    const nameInput = document.getElementById('edit-name-input');
-    const messageInput = document.getElementById('edit-message-input');
-
-    nameInput.value = data.name;
-    messageInput.value = data.message;
-    modal.style.display = 'flex';
-    nameInput.focus();
-
-    const saveBtn = document.getElementById('save-edit');
-    saveBtn.onclick = () => saveEditedMessage(messageId, password);
-}
-
-async function saveEditedMessage(messageId, password) {
-    const name = document.getElementById('edit-name-input').value.trim();
-    const message = document.getElementById('edit-message-input').value.trim();
-
-    if (!name || !message) {
-        alert('이름과 메시지를 모두 입력해주세요.');
-        return;
-    }
-
-    try {
-        const client = getSupabaseClient();
-        if (!client) {
-            throw new Error('Supabase 환경변수가 설정되지 않았습니다.');
-        }
-
-        const { data: result, error } = await client.rpc('guestbook_update', {
-            entry_id: messageId,
-            name: name,
-            message: message,
-            password_plain: password
-        });
-
-        if (error) {
-            throw new Error(error.message || '수정에 실패했습니다.');
-        }
-
-        if (!result || result.success === false) {
-            throw new Error(result?.error || '수정에 실패했습니다.');
-        }
-
-        showToast('메시지가 수정되었습니다.');
-        closeEditFormModal();
-        await initializeGuestbook(1);
-    } catch (error) {
-        console.error('수정 실패:', error);
-        alert(error.message || '수정 중 오류가 발생했습니다.');
-    }
-}
-
-function closeEditModal() {
-    document.getElementById('edit-modal').style.display = 'none';
-}
-
-function closeEditFormModal() {
-    document.getElementById('edit-form-modal').style.display = 'none';
-}
-
-function showDeleteModal(messageId) {
-    const modal = document.getElementById('password-modal');
-    const passwordInput = document.getElementById('password-input');
-
-    modal.style.display = 'flex';
-    passwordInput.value = '';
-    passwordInput.focus();
-
-    const confirmBtn = document.getElementById('confirm-delete');
-    confirmBtn.onclick = () => deleteMessage(messageId);
-}
-
-function closeDeleteModal() {
-    document.getElementById('password-modal').style.display = 'none';
-}
-
-async function deleteMessage(messageId) {
-    const password = document.getElementById('password-input').value;
-
-    if (!password) {
-        alert('비밀번호를 입력해주세요.');
-        return;
-    }
-
-    try {
-        const client = getSupabaseClient();
-        if (!client) {
-            throw new Error('Supabase 환경변수가 설정되지 않았습니다.');
-        }
-
-        const { data: result, error } = await client.rpc('guestbook_delete', {
-            entry_id: messageId,
-            password_plain: password
-        });
-
-        if (error) {
-            throw new Error(error.message || '삭제에 실패했습니다.');
-        }
-
-        if (!result || result.success === false) {
-            throw new Error(result?.error || '삭제에 실패했습니다.');
-        }
-
-        showToast('메시지가 삭제되었습니다.');
-        closeDeleteModal();
-        await initializeGuestbook(1);
-    } catch (error) {
-        console.error('삭제 실패:', error);
-        alert(error.message || '삭제 중 오류가 발생했습니다.');
-    }
 }
 
 // 배경음악 초기화 - 성능 최적화 (메타데이터만 먼저 로드)
@@ -1653,12 +855,6 @@ function showToast(message) {
 // 키보드 이벤트 핸들러
 function handleKeydown(event) {
     const mapLightbox = document.getElementById('map-lightbox');
-    const passwordModal = document.getElementById('password-modal');
-    const editModal = document.getElementById('edit-modal');
-    const editFormModal = document.getElementById('edit-form-modal');
-    const rsvpModal = document.getElementById('rsvp-modal');
-    const guestbookModal = document.getElementById('guestbook-modal');
-    const isOpen = (element) => element && element.style.display === 'flex';
 
     const activeElement = document.activeElement;
     const isInputFocused = activeElement && (
@@ -1668,18 +864,8 @@ function handleKeydown(event) {
     );
 
     if (event.key === 'Escape') {
-        if (isOpen(mapLightbox)) {
+        if (mapLightbox && mapLightbox.style.display === 'flex') {
             closeMapLightbox();
-        } else if (isOpen(guestbookModal)) {
-            closeGuestbookModal();
-        } else if (isOpen(rsvpModal)) {
-            closeRSVPModal();
-        } else if (isOpen(editFormModal)) {
-            closeEditFormModal();
-        } else if (isOpen(editModal)) {
-            closeEditModal();
-        } else if (isOpen(passwordModal)) {
-            closeDeleteModal();
         }
     } else if (event.key === ' ' && !isInputFocused) {
         event.preventDefault();
@@ -1689,25 +875,10 @@ function handleKeydown(event) {
 
 // 모달 오버레이 클릭 시 닫기
 document.addEventListener('click', function(event) {
-    const passwordModal = document.getElementById('password-modal');
-    const editModal = document.getElementById('edit-modal');
-    const editFormModal = document.getElementById('edit-form-modal');
     const mapLightbox = document.getElementById('map-lightbox');
-    const rsvpModal = document.getElementById('rsvp-modal');
-    const guestbookModal = document.getElementById('guestbook-modal');
 
-    if (event.target === passwordModal) {
-        closeDeleteModal();
-    } else if (event.target === editModal) {
-        closeEditModal();
-    } else if (event.target === editFormModal) {
-        closeEditFormModal();
-    } else if (event.target === mapLightbox) {
+    if (event.target === mapLightbox) {
         closeMapLightbox();
-    } else if (event.target === rsvpModal) {
-        closeRSVPModal();
-    } else if (event.target === guestbookModal) {
-        closeGuestbookModal();
     }
 });
 
@@ -1740,102 +911,10 @@ style.textContent = `
 `;
 document.head.appendChild(style);
 
-// ==================== 참석 의사 전달 모달 ====================
-
-// 참석 의사 전달 모달 표시
-function showAttendanceNoticeModal() {
-    // "오늘 하루 보지 않기" 확인
-    const hideUntil = localStorage.getItem('attendance-notice-hide-until');
-    if (hideUntil) {
-        const hideDate = new Date(hideUntil);
-        const now = new Date();
-        if (now < hideDate) {
-            console.log('✅ 오늘 하루 보지 않기 설정됨 - 모달 표시 안 함');
-            return;
-        }
-    }
-
-    const modal = document.getElementById('attendance-notice-modal');
-    if (modal) {
-        modal.style.display = 'flex';
-        document.body.style.overflow = 'hidden';
-        console.log('✅ 참석 의사 전달 모달 표시');
-
-        // Lucide 아이콘 초기화
-        setTimeout(reinitializeLucideIcons, 50);
-    }
-}
-
-// 참석 의사 전달 모달 닫기
-function closeAttendanceNoticeModal(skipBGM = false) {
-    const modal = document.getElementById('attendance-notice-modal');
-    if (modal) {
-        modal.style.display = 'none';
-        document.body.style.overflow = '';
-        console.log('✅ 참석 의사 전달 모달 닫기');
-
-        // RSVP 모달로 전환하는 경우가 아닐 때만 BGM 재생
-        if (!skipBGM && !isPlaying && audio && audio.readyState >= 2) {
-            setTimeout(() => {
-                tryAutoplay();
-            }, 300);
-        }
-    }
-}
-
-// 참석 의사 전달 모달에서 RSVP 모달 열기
-function openRSVPFromNotice() {
-    closeAttendanceNoticeModal(true); // BGM 재생 건너뛰기
-    setTimeout(() => {
-        openRSVPModal();
-    }, 300); // 부드러운 전환을 위한 딜레이
-}
-
-// 오늘 하루 보지 않기
-function hideAttendanceNoticeForToday() {
-    const tomorrow = new Date();
-    tomorrow.setDate(tomorrow.getDate() + 1);
-    tomorrow.setHours(0, 0, 0, 0); // 다음날 자정
-
-    localStorage.setItem('attendance-notice-hide-until', tomorrow.toISOString());
-    console.log('✅ 오늘 하루 보지 않기 설정:', tomorrow);
-
-    closeAttendanceNoticeModal();
-    showToast('내일부터 다시 표시됩니다');
-}
-
-// 오프닝 애니메이션 완료 후 모달 표시 (이벤트 리스너)
-// 주석 처리: animations.js의 WeddingAnimationManager에서 이미 처리하고 있음
-// document.addEventListener('DOMContentLoaded', function() {
-//     // 오프닝 애니메이션이 완료되는 시점에 모달 표시
-//     // animations.js의 타이밍과 일치시키기 위해 여유를 두고 설정
-//     const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-//     // 새로운 오프닝 애니메이션 타이밍:
-//     // - 일반 모드: 완료 시간 10.2초 → 모달 표시 11초
-//     // - 저전력 모드: 완료 시간 6.3초 → 모달 표시 7초
-//     const showModalDelay = prefersReducedMotion ? 7000 : 11000;
-
-//     console.log(`참석 의사 전달 모달 타이밍: ${showModalDelay}ms`);
-
-//     setTimeout(() => {
-//         showAttendanceNoticeModal();
-//     }, showModalDelay);
-// });
-
 // =============================================================================
 // 전역 함수 노출
 // =============================================================================
 
-window.openGuestbookModal = openGuestbookModal;
-window.closeGuestbookModal = closeGuestbookModal;
-window.openRSVPModal = openRSVPModal;
-window.closeRSVPModal = closeRSVPModal;
-window.showEditModal = showEditModal;
-window.closeEditModal = closeEditModal;
-window.closeEditFormModal = closeEditFormModal;
-window.showDeleteModal = showDeleteModal;
-window.closeDeleteModal = closeDeleteModal;
 window.openGalleryLightbox = openGalleryLightbox;
 window.closeGalleryLightbox = closeGalleryLightbox;
 window.navigateLightbox = navigateLightbox;
@@ -1849,13 +928,6 @@ window.copyLink = copyLink;
 window.shareNative = shareNative;
 window.addToGoogleCalendar = addToGoogleCalendar;
 window.toggleParentsAccordion = toggleParentsAccordion;
-window.increaseCompanionCount = increaseCompanionCount;
-window.decreaseCompanionCount = decreaseCompanionCount;
-window.toggleMessageExpand = toggleMessageExpand;
-window.showAttendanceNoticeModal = showAttendanceNoticeModal;
-window.closeAttendanceNoticeModal = closeAttendanceNoticeModal;
-window.openRSVPFromNotice = openRSVPFromNotice;
-window.hideAttendanceNoticeForToday = hideAttendanceNoticeForToday;
 
 // ==================== 사진 업로드 ====================
 
