@@ -38,42 +38,36 @@
 	"accounts": {
 		"groom": [
 			{
-				"name": "신랑 아버지 성함",
-				"bank": "국민은행",
-				"number": "111111-11-111111",
-				"kakaopay_url": "https://qr.kakaopay.com/FFFFFFFFFF"
+				"name": "배갑천",
+				"bank": "우리은행",
+				"number": "1002-034-705535"
 			},
 			{
-				"name": "신랑 어머니 성함",
-				"bank": "국민은행",
-				"number": "123456-01-123456",
-				"kakaopay_url": "https://qr.kakaopay.com/FFFFFFFFFF"
+				"name": "이선미",
+				"bank": "우리은행",
+				"number": "1002-034-705535"
 			},
 			{
-				"name": "신랑 이름",
+				"name": "배기훈",
 				"bank": "카카오뱅크",
-				"number": "3333-06-1234567",
-				"kakaopay_url": "https://qr.kakaopay.com/FFFFFFFFFF"
+				"number": "3333-01-8224159"
 			}
 		],
 		"bride": [
 			{
-				"name": "신부 아버지 성함",
+				"name": "김종선",
 				"bank": "농협은행",
-				"number": "132-12-123456",
-				"kakaopay_url": "https://qr.kakaopay.com/FFFFFFFFFF"
+				"number": "132-12-123456"
 			},
 			{
-				"name": "신부 어머니 성함",
+				"name": "박선영",
 				"bank": "신한은행",
-				"number": "123-123-123456",
-				"kakaopay_url": "https://qr.kakaopay.com/FFFFFFFFFF"
+				"number": "123-123-123456"
 			},
 			{
-				"name": "신부 이름",
+				"name": "김슬비",
 				"bank": "국민은행",
-				"number": "123456-12-123456",
-				"kakaopay_url": "https://qr.kakaopay.com/FFFFFFFFFF"
+				"number": "3333-20-7595186"
 			}
 		]
 	},
