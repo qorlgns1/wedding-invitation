@@ -132,13 +132,13 @@
           "bride": [
             {
               "name": "김종선",
-              "bank": "농협은행",
-              "number": "132-12-123456"
+              "bank": "국민은행",
+              "number": "3333-20-7595186"
             },
             {
               "name": "박선영",
-              "bank": "신한은행",
-              "number": "123-123-123456"
+              "bank": "국민은행",
+              "number": "3333-20-7595186"
             },
             {
               "name": "김슬비",
@@ -379,13 +379,6 @@
       </div>
     </section>
 
-    <img
-      class="letter-bottom"
-      src="static/assets/images/letter-bottom.webp"
-      alt="letter bottom"
-      loading="lazy"
-    />
-
     <!-- 캘린더 섹션 -->
     <section class="calendar">
       <img
@@ -459,14 +452,14 @@
         <button
           type="button"
           class="gallery-lightbox-close"
-          onclick="closeGalleryLightbox()"
+          onclick="closeGalleryLightbox(event)"
         >
           <i data-lucide="x"></i>
         </button>
         <button
           type="button"
           class="gallery-lightbox-nav prev"
-          onclick="navigateLightbox(-1)"
+          onclick="navigateLightbox(-1, event)"
         >
           <i data-lucide="chevron-left"></i>
         </button>
@@ -479,7 +472,7 @@
         <button
           type="button"
           class="gallery-lightbox-nav next"
-          onclick="navigateLightbox(1)"
+          onclick="navigateLightbox(1, event)"
         >
           <i data-lucide="chevron-right"></i>
         </button>
