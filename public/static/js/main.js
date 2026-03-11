@@ -10,6 +10,7 @@ let autoplayPromptShown = false;
 let bgmBannerHideTimeout = null;
 let bgmFirstInteractionHandler = null;
 let bgmAutoplayAttempt = null;
+let galleryInteractionsBound = false;
 const PHOTO_UPLOAD_ENABLED = false;
 const GALLERY_LIGHTBOX_HISTORY_KEY = '__gallery_lightbox_open__';
 const MAP_LIGHTBOX_HISTORY_KEY = '__map_lightbox_open__';
@@ -336,6 +337,7 @@ async function initializeGallery() {
 
     // 모든 사진을 그리드로 렌더링
     renderPhotoGrid();
+    bindGalleryInteractions();
 
     // 라이트박스 스와이프 제스처 초기화
     initializeLightboxSwipe();
@@ -347,7 +349,7 @@ function renderPhotoGrid() {
 
     photoGrid.innerHTML = photos.map((photo, index) => {
         return `
-            <div class="photo-item" data-index="${index}" onclick="openGalleryLightbox(${index}, event)">
+            <div class="photo-item" data-index="${index}">
                 <img data-src="${photo.src}" alt="Gallery photo ${index + 1}" loading="lazy" decoding="async" style="background: #f5f5f5;" />
             </div>
         `;
@@ -369,6 +371,40 @@ function renderPhotoGrid() {
 
 function isGalleryLightboxState(state) {
     return Boolean(state && state[GALLERY_LIGHTBOX_HISTORY_KEY]);
+}
+
+function bindGalleryInteractions() {
+    if (galleryInteractionsBound) return;
+    galleryInteractionsBound = true;
+
+    const photoGrid = document.getElementById('photo-grid');
+    const closeButton = document.getElementById('gallery-lightbox-close');
+    const prevButton = document.getElementById('gallery-lightbox-prev');
+    const nextButton = document.getElementById('gallery-lightbox-next');
+
+    if (photoGrid) {
+        photoGrid.addEventListener('click', (event) => {
+            const item = event.target.closest('.photo-item');
+            if (!item) return;
+
+            const index = Number(item.dataset.index);
+            if (Number.isNaN(index)) return;
+
+            openGalleryLightbox(index, event);
+        });
+    }
+
+    if (closeButton) {
+        closeButton.addEventListener('click', (event) => closeGalleryLightbox(event));
+    }
+
+    if (prevButton) {
+        prevButton.addEventListener('click', (event) => navigateLightbox(-1, event));
+    }
+
+    if (nextButton) {
+        nextButton.addEventListener('click', (event) => navigateLightbox(1, event));
+    }
 }
 
 // 갤러리 라이트박스 열기
