@@ -7,12 +7,17 @@
     margin: 0;
 }
 
-html, body {
+html {
     height: 100%;
-    /* 모바일에서 확대/축소 및 좌우 스크롤 방지 */
+    overflow: hidden;
+}
+
+body {
+    height: 100%;
     overflow-x: hidden;
+    overflow-y: auto;
+    /* 모바일에서 확대/축소 및 좌우 스크롤 방지 */
     touch-action: pan-y;
-    -webkit-overflow-scrolling: touch;
     /* 모바일 pull-to-refresh 방지 */
     overscroll-behavior-y: none;
 }
