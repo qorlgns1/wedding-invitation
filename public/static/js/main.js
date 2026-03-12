@@ -1374,3 +1374,19 @@ window.openSnapUpload = openSnapUpload;
 window.closeSnapUploadModal = closeSnapUploadModal;
 
 console.log('✅ 모든 전역 함수 노출 완료');
+
+// iOS Safari pull-to-refresh 방지
+(function preventPullToRefresh() {
+    let lastTouchY = 0;
+    document.addEventListener('touchstart', function(e) {
+        lastTouchY = e.touches[0].clientY;
+    }, { passive: true });
+
+    document.addEventListener('touchmove', function(e) {
+        const touchY = e.touches[0].clientY;
+        const scrollTop = document.body.scrollTop;
+        if (scrollTop <= 0 && touchY > lastTouchY) {
+            e.preventDefault();
+        }
+    }, { passive: false });
+})();
