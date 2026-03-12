@@ -28,6 +28,8 @@ html, body {
     overflow-x: hidden;
     touch-action: pan-y;
     -webkit-overflow-scrolling: touch;
+    /* 모바일 pull-to-refresh 방지 */
+    overscroll-behavior-y: none;
 }
 
 body {
