@@ -10,14 +10,11 @@ let autoplayPromptShown = false;
 let bgmBannerHideTimeout = null;
 let bgmFirstInteractionHandler = null;
 let bgmAutoplayAttempt = null;
-let galleryInteractionsBound = false;
 const PHOTO_UPLOAD_ENABLED = false;
 const GALLERY_LIGHTBOX_HISTORY_KEY = '__gallery_lightbox_open__';
 const MAP_LIGHTBOX_HISTORY_KEY = '__map_lightbox_open__';
 let galleryLightboxReopenGuardUntil = 0;
 let mapLightboxReopenGuardUntil = 0;
-let galleryLightboxHistoryPushed = false;
-let mapLightboxHistoryPushed = false;
 
 function getBasePath() {
     const path = window.location.pathname || '/';
@@ -339,7 +336,6 @@ async function initializeGallery() {
 
     // 모든 사진을 그리드로 렌더링
     renderPhotoGrid();
-    bindGalleryInteractions();
 
     // 라이트박스 스와이프 제스처 초기화
     initializeLightboxSwipe();
@@ -351,7 +347,7 @@ function renderPhotoGrid() {
 
     photoGrid.innerHTML = photos.map((photo, index) => {
         return `
-            <div class="photo-item" data-index="${index}">
+            <div class="photo-item" data-index="${index}" onclick="openGalleryLightbox(${index}, event)">
                 <img data-src="${photo.src}" alt="Gallery photo ${index + 1}" loading="lazy" decoding="async" style="background: #f5f5f5;" />
             </div>
         `;
@@ -373,52 +369,6 @@ function renderPhotoGrid() {
 
 function isGalleryLightboxState(state) {
     return Boolean(state && state[GALLERY_LIGHTBOX_HISTORY_KEY]);
-}
-
-function bindGalleryInteractions() {
-    if (galleryInteractionsBound) return;
-    galleryInteractionsBound = true;
-
-    const photoGrid = document.getElementById('photo-grid');
-    const closeButton = document.getElementById('gallery-lightbox-close');
-    const prevButton = document.getElementById('gallery-lightbox-prev');
-    const nextButton = document.getElementById('gallery-lightbox-next');
-
-    if (photoGrid) {
-        let gridTouchMoved = false;
-
-        photoGrid.addEventListener('touchstart', () => {
-            gridTouchMoved = false;
-        }, { passive: true });
-
-        photoGrid.addEventListener('touchmove', () => {
-            gridTouchMoved = true;
-        }, { passive: true });
-
-        photoGrid.addEventListener('click', (event) => {
-            if (gridTouchMoved) return;
-
-            const item = event.target.closest('.photo-item');
-            if (!item) return;
-
-            const index = Number(item.dataset.index);
-            if (Number.isNaN(index)) return;
-
-            openGalleryLightbox(index, event);
-        });
-    }
-
-    if (closeButton) {
-        closeButton.addEventListener('click', (event) => closeGalleryLightbox(event));
-    }
-
-    if (prevButton) {
-        prevButton.addEventListener('click', (event) => navigateLightbox(-1, event));
-    }
-
-    if (nextButton) {
-        nextButton.addEventListener('click', (event) => navigateLightbox(1, event));
-    }
 }
 
 // 갤러리 라이트박스 열기
@@ -448,7 +398,6 @@ function openGalleryLightbox(index, event) {
             const nextState = { ...(window.history.state || {}) };
             nextState[GALLERY_LIGHTBOX_HISTORY_KEY] = true;
             window.history.pushState(nextState, '', window.location.href);
-            galleryLightboxHistoryPushed = true;
         }
     }
 }
@@ -469,14 +418,7 @@ function closeGalleryLightbox(event, options = {}) {
     galleryLightboxReopenGuardUntil = Date.now() + 350;
 
     if (!fromPopState && isGalleryLightboxState(window.history.state)) {
-        if (galleryLightboxHistoryPushed) {
-            galleryLightboxHistoryPushed = false;
-            window.history.back();
-        } else {
-            const cleanState = { ...(window.history.state || {}) };
-            delete cleanState[GALLERY_LIGHTBOX_HISTORY_KEY];
-            window.history.replaceState(cleanState, '', window.location.href);
-        }
+        window.history.back();
     }
 }
 
@@ -910,7 +852,6 @@ function openMapLightbox(event) {
         const nextState = { ...(window.history.state || {}) };
         nextState[MAP_LIGHTBOX_HISTORY_KEY] = true;
         window.history.pushState(nextState, '', window.location.href);
-        mapLightboxHistoryPushed = true;
     }
 }
 
@@ -929,14 +870,7 @@ function closeMapLightbox(event, options = {}) {
     mapLightboxReopenGuardUntil = Date.now() + 350;
 
     if (!fromPopState && isMapLightboxState(window.history.state)) {
-        if (mapLightboxHistoryPushed) {
-            mapLightboxHistoryPushed = false;
-            window.history.back();
-        } else {
-            const cleanState = { ...(window.history.state || {}) };
-            delete cleanState[MAP_LIGHTBOX_HISTORY_KEY];
-            window.history.replaceState(cleanState, '', window.location.href);
-        }
+        window.history.back();
     }
 }
 
@@ -1134,10 +1068,8 @@ window.addEventListener('popstate', () => {
     const galleryLightbox = document.getElementById('gallery-lightbox');
     const mapLightbox = document.getElementById('map-lightbox');
     if (galleryLightbox && galleryLightbox.style.display === 'flex') {
-        galleryLightboxHistoryPushed = false;
         closeGalleryLightbox(null, { fromPopState: true });
     } else if (mapLightbox && mapLightbox.style.display === 'flex') {
-        mapLightboxHistoryPushed = false;
         closeMapLightbox(null, { fromPopState: true });
     }
 });
@@ -1572,21 +1504,3 @@ window.openSnapUpload = openSnapUpload;
 window.closeSnapUploadModal = closeSnapUploadModal;
 
 console.log('✅ 모든 전역 함수 노출 완료');
-
-// iOS Safari pull-to-refresh 방지 (CSS overscroll-behavior 미지원 브라우저 대비)
-(function preventPullToRefresh() {
-    let lastTouchY = 0;
-    document.addEventListener('touchstart', function(e) {
-        lastTouchY = e.touches[0].clientY;
-    }, { passive: true });
-
-    document.addEventListener('touchmove', function(e) {
-        const touchY = e.touches[0].clientY;
-        const scrollTop = document.body.scrollTop;
-
-        // 스크롤이 최상단이고 아래로 당기는 경우 (pull-to-refresh 제스처)
-        if (scrollTop <= 0 && touchY > lastTouchY) {
-            e.preventDefault();
-        }
-    }, { passive: false });
-})();
