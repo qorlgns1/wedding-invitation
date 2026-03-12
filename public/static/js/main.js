@@ -16,6 +16,8 @@ const GALLERY_LIGHTBOX_HISTORY_KEY = '__gallery_lightbox_open__';
 const MAP_LIGHTBOX_HISTORY_KEY = '__map_lightbox_open__';
 let galleryLightboxReopenGuardUntil = 0;
 let mapLightboxReopenGuardUntil = 0;
+let galleryLightboxHistoryPushed = false;
+let mapLightboxHistoryPushed = false;
 
 function getBasePath() {
     const path = window.location.pathname || '/';
@@ -383,7 +385,19 @@ function bindGalleryInteractions() {
     const nextButton = document.getElementById('gallery-lightbox-next');
 
     if (photoGrid) {
+        let gridTouchMoved = false;
+
+        photoGrid.addEventListener('touchstart', () => {
+            gridTouchMoved = false;
+        }, { passive: true });
+
+        photoGrid.addEventListener('touchmove', () => {
+            gridTouchMoved = true;
+        }, { passive: true });
+
         photoGrid.addEventListener('click', (event) => {
+            if (gridTouchMoved) return;
+
             const item = event.target.closest('.photo-item');
             if (!item) return;
 
@@ -434,6 +448,7 @@ function openGalleryLightbox(index, event) {
             const nextState = { ...(window.history.state || {}) };
             nextState[GALLERY_LIGHTBOX_HISTORY_KEY] = true;
             window.history.pushState(nextState, '', window.location.href);
+            galleryLightboxHistoryPushed = true;
         }
     }
 }
@@ -454,7 +469,14 @@ function closeGalleryLightbox(event, options = {}) {
     galleryLightboxReopenGuardUntil = Date.now() + 350;
 
     if (!fromPopState && isGalleryLightboxState(window.history.state)) {
-        window.history.back();
+        if (galleryLightboxHistoryPushed) {
+            galleryLightboxHistoryPushed = false;
+            window.history.back();
+        } else {
+            const cleanState = { ...(window.history.state || {}) };
+            delete cleanState[GALLERY_LIGHTBOX_HISTORY_KEY];
+            window.history.replaceState(cleanState, '', window.location.href);
+        }
     }
 }
 
@@ -888,6 +910,7 @@ function openMapLightbox(event) {
         const nextState = { ...(window.history.state || {}) };
         nextState[MAP_LIGHTBOX_HISTORY_KEY] = true;
         window.history.pushState(nextState, '', window.location.href);
+        mapLightboxHistoryPushed = true;
     }
 }
 
@@ -906,7 +929,14 @@ function closeMapLightbox(event, options = {}) {
     mapLightboxReopenGuardUntil = Date.now() + 350;
 
     if (!fromPopState && isMapLightboxState(window.history.state)) {
-        window.history.back();
+        if (mapLightboxHistoryPushed) {
+            mapLightboxHistoryPushed = false;
+            window.history.back();
+        } else {
+            const cleanState = { ...(window.history.state || {}) };
+            delete cleanState[MAP_LIGHTBOX_HISTORY_KEY];
+            window.history.replaceState(cleanState, '', window.location.href);
+        }
     }
 }
 
@@ -1104,8 +1134,10 @@ window.addEventListener('popstate', () => {
     const galleryLightbox = document.getElementById('gallery-lightbox');
     const mapLightbox = document.getElementById('map-lightbox');
     if (galleryLightbox && galleryLightbox.style.display === 'flex') {
+        galleryLightboxHistoryPushed = false;
         closeGalleryLightbox(null, { fromPopState: true });
     } else if (mapLightbox && mapLightbox.style.display === 'flex') {
+        mapLightboxHistoryPushed = false;
         closeMapLightbox(null, { fromPopState: true });
     }
 });
