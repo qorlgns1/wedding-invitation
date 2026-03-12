@@ -7,13 +7,8 @@ let isMuted = false;
 let volume = 0.3;
 let config = null;
 let autoplayPromptShown = false;
-let bgmBannerHideTimeout = null;
-let bgmFirstInteractionHandler = null;
-let bgmAutoplayAttempt = null;
 const PHOTO_UPLOAD_ENABLED = false;
-const GALLERY_LIGHTBOX_HISTORY_KEY = '__gallery_lightbox_open__';
 const MAP_LIGHTBOX_HISTORY_KEY = '__map_lightbox_open__';
-let galleryLightboxReopenGuardUntil = 0;
 let mapLightboxReopenGuardUntil = 0;
 
 function getBasePath() {
@@ -68,7 +63,7 @@ function initializePage() {
     
     // 오프닝 애니메이션 중인지 확인하고 초기 로딩 클래스 관리
     const introOverlay = document.getElementById('intro-animation-overlay');
-    if (introOverlay && introOverlay.style.display !== 'none') {
+    if (introOverlay) {
         document.body.classList.add('intro-active');
         // 오프닝이 있으면 배경음악 초기화는 나중으로 미룸 (리소스 집중)
         setTimeout(initializeBackgroundMusic, 2000);
@@ -347,7 +342,7 @@ function renderPhotoGrid() {
 
     photoGrid.innerHTML = photos.map((photo, index) => {
         return `
-            <div class="photo-item" data-index="${index}" onclick="openGalleryLightbox(${index}, event)">
+            <div class="photo-item" data-index="${index}" onclick="openGalleryLightbox(${index})">
                 <img data-src="${photo.src}" alt="Gallery photo ${index + 1}" loading="lazy" decoding="async" style="background: #f5f5f5;" />
             </div>
         `;
@@ -367,19 +362,8 @@ function renderPhotoGrid() {
     }
 }
 
-function isGalleryLightboxState(state) {
-    return Boolean(state && state[GALLERY_LIGHTBOX_HISTORY_KEY]);
-}
-
 // 갤러리 라이트박스 열기
-function openGalleryLightbox(index, event) {
-    if (event) {
-        event.preventDefault();
-        event.stopPropagation();
-    }
-
-    if (Date.now() < galleryLightboxReopenGuardUntil) return;
-
+function openGalleryLightbox(index) {
     currentLightboxIndex = index;
     const lightbox = document.getElementById('gallery-lightbox');
     const lightboxImage = document.getElementById('lightbox-image');
@@ -393,44 +377,20 @@ function openGalleryLightbox(index, event) {
         if (typeof lucide !== 'undefined') {
             lucide.createIcons();
         }
-
-        if (!isGalleryLightboxState(window.history.state)) {
-            const nextState = { ...(window.history.state || {}) };
-            nextState[GALLERY_LIGHTBOX_HISTORY_KEY] = true;
-            window.history.pushState(nextState, '', window.location.href);
-        }
     }
 }
 
 // 갤러리 라이트박스 닫기
-function closeGalleryLightbox(event, options = {}) {
-    if (event) {
-        event.preventDefault();
-        event.stopPropagation();
-    }
-
-    const { fromPopState = false } = options;
+function closeGalleryLightbox() {
     const lightbox = document.getElementById('gallery-lightbox');
-    if (!lightbox || lightbox.style.display !== 'flex') return;
-
-    lightbox.style.display = 'none';
-    document.body.style.overflow = '';
-    galleryLightboxReopenGuardUntil = Date.now() + 350;
-
-    if (!fromPopState && isGalleryLightboxState(window.history.state)) {
-        window.history.back();
+    if (lightbox) {
+        lightbox.style.display = 'none';
+        document.body.style.overflow = '';
     }
 }
 
 // 라이트박스 네비게이션
-function navigateLightbox(direction, event) {
-    if (event) {
-        event.preventDefault();
-        event.stopPropagation();
-    }
-
-    if (photos.length === 0) return;
-
+function navigateLightbox(direction) {
     const newIndex = currentLightboxIndex + direction;
 
     // 순환 네비게이션
@@ -482,8 +442,8 @@ function initializeLightboxSwipe() {
 
     // 배경 클릭시 닫기
     lightbox.addEventListener('click', (e) => {
-        if (e.target === lightbox) {
-            closeGalleryLightbox(e);
+        if (e.target === lightbox || e.target.classList.contains('gallery-lightbox-container')) {
+            closeGalleryLightbox();
         }
     });
 
@@ -561,7 +521,7 @@ function debounce(func, wait) {
 
 // 배경음악 초기화 - 성능 최적화 (메타데이터만 먼저 로드)
 function initializeBackgroundMusic() {
-    if (!config || audio) return;
+    if (!config) return;
 
     audio = new Audio(config.assets.background_music);
     audio.loop = true;
@@ -588,34 +548,16 @@ function initializeBackgroundMusic() {
     });
 
     loadUserMusicPreferences();
-    dockSpeakerControl();
-    bindMusicStartOnFirstInteraction();
-
-    document.addEventListener('wedding:intro-complete', () => {
-        if (!isPlaying) {
-            console.log('🎵 오프닝 종료 - 자동재생 재시도');
-            tryAutoplay();
-        }
-    }, { once: true });
 
     // 즉시 로딩 시작 (재생은 하지 않음)
     audio.load();
-    console.log('🎵 배경음악 로드 완료');
-
-    const introOverlay = document.getElementById('intro-animation-overlay');
-    const isIntroActive = introOverlay && introOverlay.style.display !== 'none';
-
-    if (!isIntroActive) {
-        tryAutoplay();
-    } else if (getSavedMusicPlayingPreference() === 'true') {
-        tryAutoplay();
-    }
+    console.log('🎵 배경음악 로드 명령 실행 (자동 재생 비활성화 - 모달 닫을 때만 재생)');
 
     // Fallback 3: 페이지 가시성 변경 시 자동 재생 (탭 전환, 페이지 재진입 등)
     document.addEventListener('visibilitychange', () => {
         if (!document.hidden && audio && audio.readyState >= 2) {
             // 페이지가 다시 보이고, 음악이 재생 중이 아니며, 이전에 재생했었다면
-            const savedPlaying = getSavedMusicPlayingPreference();
+            const savedPlaying = localStorage.getItem('wedding-music-playing');
             if (!isPlaying && savedPlaying === 'true') {
                 console.log('👁️ 페이지 다시 보임 - 음악 자동 재생 시도');
                 tryAutoplay();
@@ -626,94 +568,13 @@ function initializeBackgroundMusic() {
     // Fallback 4: 페이지 포커스 시 자동 재생
     window.addEventListener('focus', () => {
         if (audio && audio.readyState >= 2 && !isPlaying) {
-            const savedPlaying = getSavedMusicPlayingPreference();
+            const savedPlaying = localStorage.getItem('wedding-music-playing');
             if (savedPlaying === 'true') {
                 console.log('🔍 페이지 포커스 - 음악 자동 재생 시도');
                 tryAutoplay();
             }
         }
     });
-}
-
-function getSavedMusicPlayingPreference() {
-    try {
-        return localStorage.getItem('wedding-music-playing');
-    } catch (error) {
-        console.log('localStorage 접근 실패:', error);
-        return null;
-    }
-}
-
-function shouldStartMusicOnInteraction() {
-    return getSavedMusicPlayingPreference() !== 'false';
-}
-
-function unbindMusicStartOnFirstInteraction() {
-    if (!bgmFirstInteractionHandler) return;
-    window.removeEventListener('pointerdown', bgmFirstInteractionHandler, true);
-    bgmFirstInteractionHandler = null;
-}
-
-function dockSpeakerControl() {
-    const speakerControl = document.getElementById('bgm-speaker-control');
-    if (!speakerControl) return;
-
-    if (!speakerControl.classList.contains('detached')) {
-        speakerControl.classList.add('detached');
-        speakerControl.style.position = '';
-        speakerControl.style.top = '';
-        speakerControl.style.right = '';
-        speakerControl.style.left = '';
-        document.body.appendChild(speakerControl);
-    }
-
-    setTimeout(() => reinitializeLucideIcons(), 100);
-}
-
-function bindMusicStartOnFirstInteraction() {
-    if (bgmFirstInteractionHandler) return;
-
-    bgmFirstInteractionHandler = (event) => {
-        unbindMusicStartOnFirstInteraction();
-
-        const target = event.target;
-        if (target && typeof target.closest === 'function' && target.closest('#bgm-speaker-button')) {
-            return;
-        }
-        if (target && typeof target.closest === 'function' && target.closest('#intro-animation-overlay')) {
-            return;
-        }
-
-        startBackgroundMusicFromUserGesture();
-    };
-
-    window.addEventListener('pointerdown', bgmFirstInteractionHandler, true);
-}
-
-function startBackgroundMusicFromUserGesture() {
-    if (!config) {
-        loadConfig();
-    }
-
-    if (!audio) {
-        initializeBackgroundMusic();
-    }
-
-    unbindMusicStartOnFirstInteraction();
-
-    if (!audio || isPlaying) return Promise.resolve(true);
-    if (bgmAutoplayAttempt) return bgmAutoplayAttempt;
-
-    if (!shouldStartMusicOnInteraction()) {
-        console.log('🎵 이전에 음악을 껐기 때문에 자동 시작을 건너뜀');
-        return Promise.resolve(false);
-    }
-
-    console.log('🎵 첫 사용자 인터랙션 감지 - 음악 재생 시도');
-    bgmAutoplayAttempt = tryAutoplay().finally(() => {
-        bgmAutoplayAttempt = null;
-    });
-    return bgmAutoplayAttempt;
 }
 
 function tryAutoplay() {
@@ -732,7 +593,6 @@ function tryAutoplay() {
             console.log('⚠️ 자동재생 실패 (브라우저 정책):', error.message);
             isPlaying = false;
             updatePlayButton();
-            dockSpeakerControl();
             return false;
         });
 }
@@ -740,22 +600,35 @@ function tryAutoplay() {
 // BGM 알림 배너 표시 함수
 function showBGMNotification() {
     const banner = document.getElementById('bgm-notification-banner');
-    if (!banner) return;
+    const speakerControl = document.getElementById('bgm-speaker-control');
 
-    dockSpeakerControl();
+    if (!banner || !speakerControl) return;
+
+    // 배너 표시 (스피커는 배너 안에 포함되어 함께 내려옴)
     banner.classList.add('show');
-    console.log('🎵 BGM 알림 배너 표시');
+    console.log('🎵 BGM 알림 배너 및 스피커 아이콘 표시');
 
     // Lucide 아이콘 재초기화
     setTimeout(() => reinitializeLucideIcons(), 100);
 
-    if (bgmBannerHideTimeout) {
-        clearTimeout(bgmBannerHideTimeout);
-    }
+    // 3초 후 스피커를 배너에서 분리하고 배너를 숨김
+    setTimeout(() => {
+        // 1. 스피커의 현재 위치 계산
+        const rect = speakerControl.getBoundingClientRect();
 
-    bgmBannerHideTimeout = setTimeout(() => {
+        // 2. 스피커를 정확한 위치에 fixed로 고정
+        speakerControl.style.position = 'fixed';
+        speakerControl.style.top = rect.top + 'px';
+        speakerControl.style.right = (window.innerWidth - rect.right) + 'px';
+        speakerControl.style.left = 'auto';
+        speakerControl.classList.add('detached');
+
+        // 3. 스피커를 배너에서 분리해서 body의 직접 자식으로 옮김
+        document.body.appendChild(speakerControl);
+
+        // 4. 배너를 숨김 (스피커는 이미 DOM에서 분리되어 영향받지 않음)
         banner.classList.remove('show');
-        console.log('🎵 BGM 알림 배너 숨김');
+        console.log('🎵 BGM 알림 배너 숨김, 스피커는 body로 이동하여 우측 상단에 고정');
     }, 3000);
 }
 
@@ -767,7 +640,11 @@ function toggleMusic() {
     } else {
         audio.play().then(() => {
             console.log('✅ 사용자가 음악 재생');
-            showBGMNotification();
+            // 사용자가 직접 재생한 경우에도 배너/아이콘 표시
+            const speakerControl = document.getElementById('bgm-speaker-control');
+            if (speakerControl && !speakerControl.classList.contains('detached')) {
+                showBGMNotification();
+            }
         }).catch(error => {
             console.log('❌ 재생 실패:', error);
             alert('음악 재생에 실패했습니다. 다시 시도해주세요.');
@@ -802,7 +679,7 @@ function updatePlayButton() {
 function loadUserMusicPreferences() {
     try {
         const savedMuted = localStorage.getItem('wedding-music-muted');
-        const savedPlaying = getSavedMusicPlayingPreference();
+        const savedPlaying = localStorage.getItem('wedding-music-playing');
 
         if (savedMuted) {
             isMuted = savedMuted === 'true';
@@ -1033,7 +910,6 @@ function showToast(message) {
 
 // 키보드 이벤트 핸들러
 function handleKeydown(event) {
-    const galleryLightbox = document.getElementById('gallery-lightbox');
     const mapLightbox = document.getElementById('map-lightbox');
 
     const activeElement = document.activeElement;
@@ -1044,9 +920,7 @@ function handleKeydown(event) {
     );
 
     if (event.key === 'Escape') {
-        if (galleryLightbox && galleryLightbox.style.display === 'flex') {
-            closeGalleryLightbox();
-        } else if (mapLightbox && mapLightbox.style.display === 'flex') {
+        if (mapLightbox && mapLightbox.style.display === 'flex') {
             closeMapLightbox();
         }
     } else if (event.key === ' ' && !isInputFocused) {
@@ -1065,11 +939,8 @@ document.addEventListener('click', function(event) {
 });
 
 window.addEventListener('popstate', () => {
-    const galleryLightbox = document.getElementById('gallery-lightbox');
     const mapLightbox = document.getElementById('map-lightbox');
-    if (galleryLightbox && galleryLightbox.style.display === 'flex') {
-        closeGalleryLightbox(null, { fromPopState: true });
-    } else if (mapLightbox && mapLightbox.style.display === 'flex') {
+    if (mapLightbox && mapLightbox.style.display === 'flex') {
         closeMapLightbox(null, { fromPopState: true });
     }
 });
@@ -1115,7 +986,6 @@ window.closeMapLightbox = closeMapLightbox;
 window.openExternalMap = openExternalMap;
 window.toggleQnAItem = toggleQnAItem;
 window.toggleMusic = toggleMusic;
-window.startBackgroundMusicFromUserGesture = startBackgroundMusicFromUserGesture;
 window.copyAddress = copyAddress;
 window.shareToKakao = shareToKakao;
 window.copyLink = copyLink;

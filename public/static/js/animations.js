@@ -268,6 +268,7 @@ class WeddingAnimationManager {
     // 입장 애니메이션 초기화
     initIntroAnimation() {
         const introOverlay = document.getElementById('intro-animation-overlay');
+
         if (!introOverlay) {
             // 입장 오버레이가 없으면 바로 다른 애니메이션 시작
             console.log('입장 오버레이를 찾을 수 없습니다. 메인 애니메이션 시작');
@@ -298,42 +299,9 @@ class WeddingAnimationManager {
         const introImages = introOverlay.querySelectorAll('.intro-bg-image');
         let loadedImages = 0;
         const totalImages = introImages.length;
-        let isIntroClosed = false;
-        const introTimeouts = [];
         
         // 애니메이션 시작 여부 플래그 (중복 실행 방지)
         let isAnimationStarted = false;
-
-        const clearIntroTimeouts = () => {
-            introTimeouts.forEach((timeoutId) => clearTimeout(timeoutId));
-            introTimeouts.length = 0;
-        };
-
-        const scheduleIntroTask = (callback, delay) => {
-            const timeoutId = setTimeout(() => {
-                if (isIntroClosed) return;
-                callback();
-            }, delay);
-            introTimeouts.push(timeoutId);
-            return timeoutId;
-        };
-
-        const finishIntro = (reason = 'auto') => {
-            if (isIntroClosed) return;
-            isIntroClosed = true;
-            clearIntroTimeouts();
-
-            introOverlay.style.display = 'none';
-            document.body.style.overflow = '';
-            document.body.classList.remove('intro-active');
-            document.dispatchEvent(new Event('wedding:intro-complete'));
-
-            if (!this.scrollElements.length) {
-                this.startMainAnimations();
-            }
-
-            console.log(`오버레이 제거 (${reason})`);
-        };
 
         const startIntroAnimation = () => {
             if (isAnimationStarted) return;
@@ -374,7 +342,6 @@ class WeddingAnimationManager {
 
             // 1. Scene 1 슬라이드인 완료 대기
             const onScene1SlideInEnd = (e) => {
-                if (isIntroClosed) return;
                 // 중복 이벤트 방지
                 if (e.target !== scene1) return;
                 scene1.removeEventListener('animationend', onScene1SlideInEnd);
@@ -389,14 +356,14 @@ class WeddingAnimationManager {
 
                 // 2-1. married 텍스트 완성 후 밑줄 애니메이션 시작
                 // We're (700ms) + getting (700ms) + married (400ms) = 1800ms
-                scheduleIntroTask(() => {
+                setTimeout(() => {
                     console.log('married 텍스트 완성, 밑줄 애니메이션 시작');
                     this.startMarriedUnderline();
                 }, 1800);
 
                 // 3. 글자 쓰는 애니메이션이 끝날 때까지 대기 (Duration 기반)
                 // Vara.js의 animationEnd 이벤트를 확실히 잡기 어려우므로 duration timer 사용이 가장 안정적
-                scheduleIntroTask(() => {
+                setTimeout(() => {
                     console.log('글자 쓰기 완료 직후, 페이드아웃 시작');
                     
                     // 이미지(bg-image) 페이드아웃 먼저 시작
@@ -407,7 +374,7 @@ class WeddingAnimationManager {
                     }
                     
                     // 0.5초 후 글자 페이드아웃 시작
-                    scheduleIntroTask(() => {
+                    setTimeout(() => {
                         const textContainer = scene1.querySelector('.intro-main-text');
                         if(textContainer) {
                             textContainer.style.transition = 'opacity 1.0s ease-out'; // 더 빨리 사라지도록 시간 단축 (1.5s -> 1.0s)
@@ -415,8 +382,15 @@ class WeddingAnimationManager {
                         }
                         
                         // 3. 페이드아웃이 얼추 끝날 때쯤(0.8초 후) 오버레이 제거 및 모달 표시
-                        scheduleIntroTask(() => {
-                            finishIntro();
+                        setTimeout(() => {
+                            console.log('오버레이 제거');
+                            if(introOverlay) {
+                                introOverlay.style.display = 'none';
+                                document.body.style.overflow = '';
+                                document.body.classList.remove('intro-active'); // 오프닝 상태 해제
+                                this.startMainAnimations();
+                            }
+                            
                         }, 800); // 대기 시간 단축 (1500 -> 800)
                         
                     }, 500); // 글자는 0.5초 더 있다가 사라짐 (기존 800 -> 500)
@@ -428,15 +402,19 @@ class WeddingAnimationManager {
             scene1.addEventListener('animationend', onScene1SlideInEnd);
             
             // 안전장치: 만약 animationend 이벤트가 발생하지 않는 경우(모바일 등)를 대비하여 강제 실행
-            scheduleIntroTask(() => {
+            setTimeout(() => {
                 // 이미 실행되었는지 확인하는 로직 추가 필요하지만, 단순 타임아웃으로 처리
             }, totalAnimationDuration + 5000);
 
             // 폴백: 애니메이션이 멈춘 경우를 대비한 안전장치 (15초)
-            scheduleIntroTask(() => {
+            setTimeout(() => {
                 if (introOverlay && introOverlay.style.display !== 'none') {
                     console.log('⚠️ 오프닝 애니메이션 타임아웃, 강제 제거');
-                    finishIntro('timeout');
+                    introOverlay.style.display = 'none';
+                    document.body.style.overflow = '';
+                    if (!this.scrollElements.length) {
+                        this.startMainAnimations();
+                    }
                 }
             }, 15000); // 15초 타임아웃
         };
