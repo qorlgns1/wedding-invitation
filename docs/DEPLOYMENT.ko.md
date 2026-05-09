@@ -22,6 +22,7 @@ VITE_KAKAO_APP_KEY=your_kakao_javascript_key
 
 ```bash
 npm run dev
+npm run typecheck
 npm run build
 npm run preview
 ```

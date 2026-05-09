@@ -1,18 +1,30 @@
 **English** | [한국어](./README.md)
 
-# Mobile Wedding Invitation (Node + GitHub Pages)
+# Mobile Wedding Invitation (Vite + React + TypeScript)
 
-This project has been migrated from FastAPI to a **Node (Vite) static app**.
+This project has been migrated from FastAPI to a **Vite + React + TypeScript static app**.
 
 ## What changed
 
 - Deployment: GitHub Pages (`/<repo>/`)
-- Runtime: Node + Vite (vanilla JS)
+- Runtime: Node + Vite
+- UI: React + TypeScript
 
 ## Stack
 
-- Frontend: Vite, Vanilla JavaScript
+- Frontend: Vite, React, TypeScript
 - Hosting: GitHub Pages + GitHub Actions
+
+## Architecture
+
+- `src/config`: wedding data, accounts, asset paths, feature flags
+- `src/components`: cover, gallery, location, account, share, music, and other sections
+- `src/hooks`: countdown, toast, scroll animation, Kakao sharing
+- `src/lib`: date, path, clipboard, map, and other shared utilities
+
+## Adding Gallery Photos
+
+Add image files to `public/static/assets/images/wedding-snaps/`. Vite automatically creates the gallery list, so `manifest.json` does not need to be edited manually.
 
 ## Quick start
 
@@ -35,9 +47,10 @@ Set this in `.env`:
 npm run dev
 ```
 
-### 4) Build check
+### 4) Type and build checks
 
 ```bash
+npm run typecheck
 npm run build
 npm run preview
 ```
@@ -57,9 +70,13 @@ See [`docs/DEPLOYMENT.md`](./docs/DEPLOYMENT.md) for details.
 ```text
 wedding-invitation/
 ├── .github/workflows/pages.yml
-├── config/config.json
 ├── public/
 │   └── static/
+├── src/
+│   ├── components/
+│   ├── config/
+│   ├── hooks/
+│   └── lib/
 ├── index.html
 ├── package.json
 └── vite.config.js

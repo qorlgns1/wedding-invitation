@@ -205,11 +205,7 @@ textarea:focus {
 
 /* ===== fonts.css ===== */
 /*
- * 🚀 성능 최적화: Self-hosted 폰트 제거
- * - Noto Sans KR: 10MB Variable Font 제거 → Google Fonts 사용 (훨씬 작고 빠름)
- * - Spectral: 사용하지 않음, 제거
- *
- * Google Fonts에서 필요한 웨이트만 로드하므로 훨씬 효율적입니다.
+ * Font loading is centralized in index.html to keep Google Fonts out of CSS imports.
  */
 
 
@@ -218,15 +214,6 @@ textarea:focus {
    청첩장 오프닝 애니메이션 CSS
    static/css/animations.css
 ========================= */
-
-/* =========================
-   폰트 정의
-========================= */
-
-/* Parisienne 폰트는 HTML에서 Google Fonts로 로드됨 */
-
-/* 기타 폰트 (Playfair Display, Montserrat) */
-@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600&family=Montserrat:wght@300;400&display=swap');
 
 /* =========================
    오프닝 애니메이션 - 기본 구조
@@ -3448,4 +3435,3 @@ body.intro-active .intro-animation-overlay {
         border-radius: 8px;
     }
 }
-

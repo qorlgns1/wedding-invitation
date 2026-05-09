@@ -4,15 +4,6 @@
 ========================= */
 
 /* =========================
-   폰트 정의
-========================= */
-
-/* Parisienne 폰트는 HTML에서 Google Fonts로 로드됨 */
-
-/* 기타 폰트 (Playfair Display, Montserrat) */
-@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600&family=Montserrat:wght@300;400&display=swap');
-
-/* =========================
    오프닝 애니메이션 - 기본 구조
 ========================= */
 
