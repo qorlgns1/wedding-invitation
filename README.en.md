@@ -12,7 +12,7 @@ This project has been migrated from FastAPI to a **Vite + React + TypeScript sta
 
 ## Stack
 
-- Frontend: Vite, React, TypeScript
+- Frontend: Vite, React, TypeScript, Tailwind CSS
 - Hosting: GitHub Pages + GitHub Actions
 
 ## Architecture
@@ -21,6 +21,7 @@ This project has been migrated from FastAPI to a **Vite + React + TypeScript sta
 - `src/components`: cover, gallery, location, account, share, music, and other sections
 - `src/hooks`: countdown, toast, scroll animation, Kakao sharing
 - `src/lib`: date, path, clipboard, map, and other shared utilities
+- `src/styles`: Tailwind entrypoint and design tokens
 
 ## Adding Gallery Photos
 

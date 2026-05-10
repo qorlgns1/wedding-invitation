@@ -3,6 +3,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
+import tailwindcss from '@tailwindcss/vite';
 
 process.env.VITE_KAKAO_APP_KEY ??= '';
 
@@ -61,5 +62,5 @@ function galleryPhotosPlugin() {
 
 export default defineConfig(({ command }) => ({
   base: command === 'serve' ? '/' : PROD_BASE_PATH,
-  plugins: [galleryPhotosPlugin(), react()],
+  plugins: [galleryPhotosPlugin(), tailwindcss(), react()],
 }));

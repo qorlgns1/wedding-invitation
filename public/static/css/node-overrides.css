@@ -12,8 +12,3 @@
 .footer-stats {
   display: none !important;
 }
-
-/* Keep layout stable after removing sections */
-.share-section {
-  margin-top: 1.5rem;
-}

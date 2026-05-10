@@ -6,12 +6,6 @@
     padding: 2em 2em 4em 2em !important;
 }
 
-/* 공유 섹션 배경색을 확실히 흰색으로 설정 */
-.share-section {
-    background-color: #FFFFFF !important;
-    padding: 2em 0;
-}
-
 .image-overlay-share {
     max-width: var(--content-max-width);
     margin: 0 auto;

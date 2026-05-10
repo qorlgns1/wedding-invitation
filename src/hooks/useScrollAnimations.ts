@@ -18,7 +18,7 @@ export function useScrollAnimations(enabled: boolean): void {
       '.location .map-buttons-container',
       '.account-trapezoid h2',
       '.account-accordion-container',
-      '.share-button-container',
+      '[data-scroll-animate="share-button"]',
     ];
 
     const elements = animationSelectors.flatMap((selector) =>
