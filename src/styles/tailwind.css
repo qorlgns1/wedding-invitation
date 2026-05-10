@@ -1,7 +1,4 @@
-@layer theme, utilities;
-
 @import "tailwindcss/theme.css" layer(theme);
-@import "tailwindcss/utilities.css" layer(utilities);
 
 @theme {
   --color-wedding-primary: #B99493;
@@ -10,4 +7,18 @@
   --color-wedding-muted: #a3a3a3;
   --font-kr: "Noto Sans KR", sans-serif;
   --font-sacramento: "Sacramento", serif;
+  --font-sriracha: "Sriracha", cursive;
+}
+
+@import "tailwindcss/utilities.css";
+
+@keyframes toast-scale-in {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.8);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
 }

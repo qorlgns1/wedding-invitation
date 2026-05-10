@@ -16,8 +16,8 @@ export function useScrollAnimations(enabled: boolean): void {
       '.location .address-text',
       '.location .map-image-container',
       '.location .map-buttons-container',
-      '.account-trapezoid h2',
-      '.account-accordion-container',
+      '[data-scroll-animate="account-title"]',
+      '[data-scroll-animate="account-list"]',
       '[data-scroll-animate="share-button"]',
     ];
 

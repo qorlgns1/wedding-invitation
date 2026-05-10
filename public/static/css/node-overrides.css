@@ -2,9 +2,7 @@
 
 /* Scope trimmed for this deployment */
 .chatbot-wrapper,
-.snaps-section,
-.video-section,
-#snap-upload-modal {
+.video-section {
   display: none !important;
 }
 

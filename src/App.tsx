@@ -11,6 +11,7 @@ import { MusicControl } from './components/MusicControl';
 import { ShareSection } from './components/ShareSection';
 import { SnapsSection } from './components/SnapsSection';
 import { Toast } from './components/Toast';
+import { SNAPS_SECTION_VISIBLE } from './config/features';
 import { weddingConfig } from './config/wedding';
 import { useScrollAnimations } from './hooks/useScrollAnimations';
 import { useToast } from './hooks/useToast';
@@ -57,11 +58,11 @@ export default function App() {
       <GallerySection />
       <LocationSection />
       <AccountSection showAccountToast={showAccountToast} />
-      <SnapsSection showToast={showShareToast} />
+      {SNAPS_SECTION_VISIBLE && <SnapsSection showToast={showShareToast} />}
       <ShareSection showToast={showShareToast} />
       <MusicControl />
-      <Toast id="share-toast" className="share-toast" toast={shareToast} messageId="toast-message" />
-      <Toast id="account-toast" className="account-toast" toast={accountToast} />
+      <Toast id="share-toast" variant="share" toast={shareToast} messageId="toast-message" />
+      <Toast id="account-toast" variant="account" toast={accountToast} />
       <FooterSection />
     </>
   );
