@@ -4,6 +4,7 @@ export type Account = {
   name: string;
   bank: string;
   number: string;
+  copyable: boolean;
 };
 
 export type WeddingConfig = {
@@ -73,6 +74,7 @@ export type WeddingConfig = {
       groomButton: string;
       brideButton: string;
       copyButtonText: string;
+      copyUnavailableText: string;
       copySuccessMessage: string;
       copyErrorMessage: string;
     };
@@ -117,6 +119,28 @@ export type WeddingConfig = {
   };
 };
 
+type AccountSeed = {
+  name: string;
+  bank: string;
+  envKey: string;
+  maskedNumber: string;
+};
+
+function readEnvValue(key: string): string | undefined {
+  const value = import.meta.env[key];
+  return typeof value === 'string' && value.trim() ? value.trim() : undefined;
+}
+
+function createAccount({ name, bank, envKey, maskedNumber }: AccountSeed): Account {
+  const number = readEnvValue(envKey);
+  return {
+    name,
+    bank,
+    number: number ?? maskedNumber,
+    copyable: Boolean(number),
+  };
+}
+
 export const weddingConfig: WeddingConfig = {
   wedding: {
     groom: {
@@ -150,26 +174,44 @@ export const weddingConfig: WeddingConfig = {
   },
   accounts: {
     groom: [
-      {
+      createAccount({
         name: '배갑천',
         bank: '카카오뱅크 (예금주: 배기훈)',
-        number: '3333-13-8324048',
-      },
-      {
+        envKey: 'VITE_ACCOUNT_GROOM_FATHER',
+        maskedNumber: '3333-13-*******',
+      }),
+      createAccount({
         name: '이선미',
         bank: '우리은행 (예금주: 배기훈)',
-        number: '1002-034-705535',
-      },
-      {
+        envKey: 'VITE_ACCOUNT_GROOM_MOTHER',
+        maskedNumber: '1002-034-******',
+      }),
+      createAccount({
         name: '배기훈',
         bank: '카카오뱅크',
-        number: '3333-01-8224159',
-      },
+        envKey: 'VITE_ACCOUNT_GROOM',
+        maskedNumber: '3333-01-*******',
+      }),
     ],
     bride: [
-      { name: '김종선', bank: '우리은행', number: '1002-548-949182' },
-      { name: '박선영', bank: 'SC제일은행', number: '64720475914' },
-      { name: '김슬비', bank: '카카오뱅크', number: '3333-20-7595186' },
+      createAccount({
+        name: '김종선',
+        bank: '우리은행',
+        envKey: 'VITE_ACCOUNT_BRIDE_FATHER',
+        maskedNumber: '1002-548-******',
+      }),
+      createAccount({
+        name: '박선영',
+        bank: 'SC제일은행',
+        envKey: 'VITE_ACCOUNT_BRIDE_MOTHER',
+        maskedNumber: '6472047****',
+      }),
+      createAccount({
+        name: '김슬비',
+        bank: '카카오뱅크',
+        envKey: 'VITE_ACCOUNT_BRIDE',
+        maskedNumber: '3333-20-*******',
+      }),
     ],
   },
   content: {
@@ -205,6 +247,7 @@ export const weddingConfig: WeddingConfig = {
       groomButton: '신랑 측 계좌번호',
       brideButton: '신부 측 계좌번호',
       copyButtonText: '복사하기',
+      copyUnavailableText: '비공개',
       copySuccessMessage: '계좌번호가 복사되었습니다! 💰',
       copyErrorMessage: '복사에 실패했습니다. 다시 시도해주세요.',
     },

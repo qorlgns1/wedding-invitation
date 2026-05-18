@@ -42,6 +42,7 @@ cp .env.example .env
 Set this in `.env`:
 
 - `VITE_KAKAO_APP_KEY` (optional)
+- `VITE_ACCOUNT_*` (optional account numbers for a real invitation build; empty values stay masked)
 
 ### 3) Run locally
 

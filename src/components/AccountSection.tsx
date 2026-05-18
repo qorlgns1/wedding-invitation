@@ -1,11 +1,17 @@
 import { ChevronDown } from 'lucide-react';
 import { useState } from 'react';
-import { type AccountGroup, weddingConfig } from '../config/wedding';
+import { type Account, type AccountGroup, weddingConfig } from '../config/wedding';
 import { copyText } from '../lib/clipboard';
 
 type AccountSectionProps = {
   showAccountToast: (message: string) => void;
 };
+
+const copyButtonBaseClass =
+  'flex shrink-0 items-center justify-center gap-[0.4em] rounded-lg border border-[rgba(185,148,147,0.3)] bg-white px-4 py-[0.6em] font-kr text-[0.85em] font-semibold text-wedding-primary transition-all duration-300 ease-in-out max-[768px]:px-[0.8em] max-[768px]:py-[0.5em] max-[768px]:text-[0.8em] max-[480px]:w-full';
+const copyButtonEnabledClass =
+  'hover:scale-[1.02] hover:border-wedding-primary hover:bg-[rgba(185,148,147,0.1)]';
+const copyButtonDisabledClass = 'cursor-not-allowed opacity-60';
 
 export function AccountSection({ showAccountToast }: AccountSectionProps) {
   const [expanded, setExpanded] = useState<Record<AccountGroup, boolean>>({
@@ -18,9 +24,11 @@ export function AccountSection({ showAccountToast }: AccountSectionProps) {
     setExpanded((current) => ({ ...current, [type]: !current[type] }));
   };
 
-  const handleCopy = async (number: string) => {
+  const handleCopy = async (account: Account) => {
+    if (!account.copyable) return;
+
     try {
-      await copyText(number);
+      await copyText(account.number);
       showAccountToast(accountConfig.copySuccessMessage);
     } catch {
       showAccountToast(accountConfig.copyErrorMessage);
@@ -74,10 +82,15 @@ export function AccountSection({ showAccountToast }: AccountSectionProps) {
                 </div>
                 <button
                   type="button"
-                  className="flex shrink-0 items-center justify-center gap-[0.4em] rounded-lg border border-[rgba(185,148,147,0.3)] bg-white px-4 py-[0.6em] font-kr text-[0.85em] font-semibold text-wedding-primary transition-all duration-300 ease-in-out hover:scale-[1.02] hover:border-wedding-primary hover:bg-[rgba(185,148,147,0.1)] max-[768px]:px-[0.8em] max-[768px]:py-[0.5em] max-[768px]:text-[0.8em] max-[480px]:w-full"
-                  onClick={() => void handleCopy(account.number)}
+                  className={`${copyButtonBaseClass} ${
+                    account.copyable ? copyButtonEnabledClass : copyButtonDisabledClass
+                  }`}
+                  disabled={!account.copyable}
+                  onClick={() => void handleCopy(account)}
                 >
-                  {accountConfig.copyButtonText}
+                  {account.copyable
+                    ? accountConfig.copyButtonText
+                    : accountConfig.copyUnavailableText}
                 </button>
               </div>
             </div>

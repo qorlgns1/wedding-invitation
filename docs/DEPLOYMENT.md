@@ -34,5 +34,6 @@ Deployment workflow is defined in `.github/workflows/pages.yml`.
 Repository variable (optional):
 
 - `VITE_KAKAO_APP_KEY`
+- `VITE_ACCOUNT_*` when a real invitation build should expose account numbers
 
 Push to `main` to trigger automatic deployment.

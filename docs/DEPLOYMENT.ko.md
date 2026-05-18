@@ -34,5 +34,6 @@ npm run preview
 Repository Variables 설정(선택):
 
 - `VITE_KAKAO_APP_KEY`
+- `VITE_ACCOUNT_*` (실제 청첩장 배포에서 계좌번호 노출이 필요한 경우)
 
 `main` 브랜치에 push 하면 자동으로 Pages에 배포됩니다.

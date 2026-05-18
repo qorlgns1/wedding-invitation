@@ -42,6 +42,7 @@ cp .env.example .env
 `.env` 파일에 아래 값을 입력하세요.
 
 - `VITE_KAKAO_APP_KEY` (선택)
+- `VITE_ACCOUNT_*` (선택, 실제 청첩장 배포용 계좌번호. 비워두면 마스킹)
 
 ### 3) 개발 서버 실행
 
