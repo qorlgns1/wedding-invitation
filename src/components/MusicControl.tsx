@@ -90,23 +90,40 @@ export function MusicControl() {
     }
   };
 
-  return (
-    <div
-      className={`bgm-notification-banner${showBanner ? ' show' : ''}`}
-      id="bgm-notification-banner"
+  const speakerButton = (
+    <button
+      type="button"
+      className="relative flex h-9 w-9 items-center justify-center rounded-full bg-[#696A6A] p-0 text-white shadow-[0_2px_10px_rgba(0,0,0,0.2)] backdrop-blur-[10px] transition-all duration-300 ease-in-out hover:scale-105 hover:bg-[#5a5b5b] hover:shadow-[0_8px_30px_rgba(0,0,0,0.4)] max-[768px]:h-8 max-[768px]:w-8"
+      id="bgm-speaker-button"
+      onClick={() => void toggleMusic()}
+      aria-label={isPlaying ? '배경음악 끄기' : '배경음악 켜기'}
     >
-      <span className="bgm-notification-text">{weddingConfig.content.bgm.notification}</span>
-      <div className={`bgm-speaker-control${showBanner ? '' : ' detached'}`}>
-        <button
-          type="button"
-          className="bgm-speaker-button"
-          id="bgm-speaker-button"
-          onClick={() => void toggleMusic()}
-          aria-label={isPlaying ? '배경음악 끄기' : '배경음악 켜기'}
-        >
-          {isPlaying ? <Volume2 data-lucide="volume-2" /> : <VolumeX data-lucide="volume-x" />}
-        </button>
+      {isPlaying ? (
+        <Volume2 className="h-5 w-5 stroke-[2.5] max-[768px]:h-[18px] max-[768px]:w-[18px]" />
+      ) : (
+        <VolumeX className="h-5 w-5 stroke-[2.5] max-[768px]:h-[18px] max-[768px]:w-[18px]" />
+      )}
+    </button>
+  );
+
+  return (
+    <>
+      <div
+        className={`fixed left-1/2 z-[2000] flex w-full max-w-[var(--content-max-width)] -translate-x-1/2 items-center justify-between gap-4 bg-[#696A6A] px-6 py-[0.6em] text-white shadow-[0_4px_20px_rgba(0,0,0,0.3)] backdrop-blur-[10px] transition-[top] duration-500 ease-in-out ${
+          showBanner ? 'top-0' : '-top-20'
+        } max-[768px]:px-[1.2em] max-[768px]:py-[0.5em]`}
+        id="bgm-notification-banner"
+      >
+        <span className="pointer-events-none font-kr text-[1em] font-medium text-white max-[768px]:text-[0.9em]">
+          {weddingConfig.content.bgm.notification}
+        </span>
+        {showBanner && <div className="flex items-center justify-center">{speakerButton}</div>}
       </div>
-    </div>
+      {!showBanner && (
+        <div className="fixed right-5 top-2.5 z-[2001] flex items-center justify-center max-[768px]:right-[15px] max-[768px]:top-2">
+          {speakerButton}
+        </div>
+      )}
+    </>
   );
 }
