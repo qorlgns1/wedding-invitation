@@ -56,7 +56,6 @@ export type WeddingConfig = {
     };
     buttons: {
       googleCalendar: string;
-      photoUpload: string;
       kakaoShare: string;
     };
     letter: {
@@ -86,17 +85,6 @@ export type WeddingConfig = {
         naver: string;
         kakao: string;
         tmap: string;
-      };
-    };
-    snaps: {
-      subtitleEn: string;
-      title: string;
-      description: string[];
-      uploadButton: string;
-      uploadModal: {
-        title: string;
-        preparing: string;
-        closeButton: string;
       };
     };
     share: {
@@ -205,7 +193,6 @@ export const weddingConfig: WeddingConfig = {
     },
     buttons: {
       googleCalendar: 'Google Calendar에 추가',
-      photoUpload: '사진 업로드',
       kakaoShare: '카카오톡으로 초대장 보내기',
     },
     letter: {
@@ -233,21 +220,6 @@ export const weddingConfig: WeddingConfig = {
       mapClickHint: '클릭하면 크게 볼 수 있습니다',
       mapLightboxInfo: '찾아오는 길',
       mapButtons: { naver: '네이버맵', kakao: '카카오맵', tmap: '티맵' },
-    },
-    snaps: {
-      subtitleEn: 'CAPTURE OUR MOMENTS',
-      title: 'Snaps',
-      description: [
-        '신랑신부의 행복한 순간을 담아주세요.',
-        '예식 당일, 아래 버튼을 통해 사진을 올려주세요.',
-        '많은 참여 부탁드려요!',
-      ],
-      uploadButton: '사진 업로드',
-      uploadModal: {
-        title: '사진 업로드 중...',
-        preparing: '업로드 준비 중...',
-        closeButton: '확인',
-      },
     },
     share: {
       kakaoShare: {

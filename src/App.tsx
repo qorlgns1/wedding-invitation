@@ -9,9 +9,7 @@ import { LetterSection } from './components/LetterSection';
 import { LocationSection } from './components/LocationSection';
 import { MusicControl } from './components/MusicControl';
 import { ShareSection } from './components/ShareSection';
-import { SnapsSection } from './components/SnapsSection';
 import { Toast } from './components/Toast';
-import { SNAPS_SECTION_VISIBLE } from './config/features';
 import { weddingConfig } from './config/wedding';
 import { useScrollAnimations } from './hooks/useScrollAnimations';
 import { useToast } from './hooks/useToast';
@@ -58,7 +56,6 @@ export default function App() {
       <GallerySection />
       <LocationSection />
       <AccountSection showAccountToast={showAccountToast} />
-      {SNAPS_SECTION_VISIBLE && <SnapsSection showToast={showShareToast} />}
       <ShareSection showToast={showShareToast} />
       <MusicControl />
       <Toast id="share-toast" variant="share" toast={shareToast} messageId="toast-message" />
