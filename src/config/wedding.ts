@@ -125,6 +125,7 @@ export type WeddingConfig = {
   };
   assets: {
     backgroundMusic: string;
+    coverImage: string;
     galleryPath: string;
     mapImage: string;
     kakaotalkIcon: string;
@@ -273,6 +274,7 @@ export const weddingConfig: WeddingConfig = {
   },
   assets: {
     backgroundMusic: '/static/assets/audio/wedding-music.mp3',
+    coverImage: '/static/assets/images/cover.webp',
     galleryPath: '/static/assets/images/wedding-snaps/',
     mapImage: '/static/assets/images/wedding-signature.webp',
     kakaotalkIcon: '/static/assets/images/kakaotalk.webp',
