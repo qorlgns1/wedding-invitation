@@ -90,15 +90,23 @@ export function GallerySection() {
 
   return (
     <>
-      <section className="gallery">
-        <p className="snap-subtitle-en">{weddingConfig.content.gallery.subtitleEn}</p>
-        <div className="header">
-          <h2 className="title kr">{weddingConfig.content.gallery.title}</h2>
+      <section className="mx-auto max-w-[var(--content-max-width)] bg-white px-4 pb-16 pt-[4.5em] max-[768px]:px-2 max-[768px]:py-12 max-[480px]:px-[0.3em] max-[480px]:py-10">
+        <p className="mb-2 text-center font-sriracha text-[0.9em] tracking-[1px] text-[#999] max-[768px]:text-[0.85em] max-[480px]:text-[0.8em]">
+          {weddingConfig.content.gallery.subtitleEn}
+        </p>
+        <div className="mb-6 text-center" data-scroll-animate="gallery-title">
+          <h2 className="font-kr text-[1.3rem] font-semibold tracking-[1px] text-wedding-primary max-[768px]:text-[1.2rem] max-[480px]:text-[1.1rem]">
+            {weddingConfig.content.gallery.title}
+          </h2>
         </div>
-        <div className="photo-grid" id="photo-grid">
+        <div
+          className="mx-auto grid max-w-[var(--content-max-width)] grid-cols-3 gap-1 max-[768px]:gap-[3px] max-[480px]:gap-0.5"
+          data-scroll-animate="gallery-grid"
+          id="photo-grid"
+        >
           {photos.map((photo, index) => (
             <button
-              className="photo-item"
+              className="relative aspect-[2/3] overflow-hidden bg-[#f5f5f5] transition-opacity hover:opacity-90 [contain:layout_paint]"
               data-index={index}
               key={photo.key}
               type="button"
@@ -107,9 +115,9 @@ export function GallerySection() {
               <img
                 src={photo.src}
                 alt={`Gallery photo ${index + 1}`}
+                className="h-full w-full object-cover"
                 loading="lazy"
                 decoding="async"
-                style={{ background: '#f5f5f5' }}
               />
             </button>
           ))}
@@ -118,9 +126,8 @@ export function GallerySection() {
 
       {lightboxPhoto && (
         <div
-          className="gallery-lightbox-overlay"
+          className="fixed inset-0 z-[9999] flex animate-[overlay-fade-in_0.3s_ease-out] items-center justify-center bg-black/95 [backface-visibility:hidden] [will-change:opacity]"
           id="gallery-lightbox"
-          style={{ display: 'flex' }}
           onClick={(event) => {
             if (event.target === event.currentTarget) closeLightbox();
           }}
@@ -132,36 +139,36 @@ export function GallerySection() {
           }}
           onTouchEnd={handleTouchEnd}
         >
-          <div className="gallery-lightbox-container">
+          <div className="relative flex h-full w-full items-center justify-center">
             <button
               type="button"
-              className="gallery-lightbox-close"
+              className="absolute right-5 top-5 z-[10001] flex h-11 w-11 items-center justify-center rounded-full bg-white/10 text-white transition-all duration-300 hover:scale-110 hover:bg-white/20 max-[768px]:right-[15px] max-[768px]:top-[15px] max-[768px]:h-10 max-[768px]:w-10"
               onClick={() => closeLightbox()}
               aria-label="갤러리 닫기"
             >
-              <X aria-hidden="true" />
+              <X className="h-6 w-6" aria-hidden="true" />
             </button>
             <button
               type="button"
-              className="gallery-lightbox-nav prev"
+              className="absolute left-5 top-1/2 z-[10001] flex h-12 w-12 items-center justify-center rounded-full bg-white/10 text-white transition-colors duration-300 [transform:translateY(-50%)] hover:bg-white/20 max-[768px]:left-2.5 max-[768px]:h-10 max-[768px]:w-10"
               onClick={() => navigateLightbox(-1)}
               aria-label="이전 사진"
             >
-              <ChevronLeft aria-hidden="true" />
+              <ChevronLeft className="h-7 w-7" aria-hidden="true" />
             </button>
             <img
-              className="gallery-lightbox-image"
+              className="max-h-[85vh] max-w-[90vw] animate-[modal-zoom-in_0.3s_ease-out] object-contain max-[480px]:max-h-[80vh] max-[480px]:max-w-[95vw]"
               id="lightbox-image"
               src={lightboxPhoto.src}
               alt="갤러리 확대 보기"
             />
             <button
               type="button"
-              className="gallery-lightbox-nav next"
+              className="absolute right-5 top-1/2 z-[10001] flex h-12 w-12 items-center justify-center rounded-full bg-white/10 text-white transition-colors duration-300 [transform:translateY(-50%)] hover:bg-white/20 max-[768px]:right-2.5 max-[768px]:h-10 max-[768px]:w-10"
               onClick={() => navigateLightbox(1)}
               aria-label="다음 사진"
             >
-              <ChevronRight aria-hidden="true" />
+              <ChevronRight className="h-7 w-7" aria-hidden="true" />
             </button>
           </div>
         </div>
