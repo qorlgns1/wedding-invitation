@@ -7,7 +7,8 @@ This project has been migrated from FastAPI to a **Vite + React + TypeScript sta
 ## What changed
 
 - Deployment: GitHub Pages (`/<repo>/`)
-- Runtime: Node + Vite
+- Runtime: browser-only static site
+- Development/build tooling: Node.js + Vite
 - UI: React + TypeScript
 
 ## Stack
