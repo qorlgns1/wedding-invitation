@@ -132,8 +132,6 @@ export type WeddingConfig = {
     letterDeco: string;
     calendarImage: string;
     introImage: string;
-    introFont: string;
-    varaScript: string;
   };
 };
 
@@ -281,7 +279,5 @@ export const weddingConfig: WeddingConfig = {
     letterDeco: '/static/assets/images/letter-deco.svg',
     calendarImage: '/static/assets/images/calendar.webp',
     introImage: '/static/assets/images/animation1.webp',
-    introFont: '/static/assets/fonts/json/Parisienne.json',
-    varaScript: '/static/js/vara.min.js',
   },
 };

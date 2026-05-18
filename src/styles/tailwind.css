@@ -6,6 +6,7 @@
   --color-wedding-text: #434343;
   --color-wedding-muted: #a3a3a3;
   --font-kr: "Noto Sans KR", sans-serif;
+  --font-montserrat: "Montserrat", sans-serif;
   --font-sacramento: "Sacramento", serif;
   --font-spectral: "Spectral", serif;
   --font-sriracha: "Sriracha", cursive;
@@ -41,5 +42,44 @@
   to {
     opacity: 1;
     transform: scale(1);
+  }
+}
+
+@keyframes intro-slide-in {
+  from {
+    opacity: 0;
+    transform: translateX(-50px);
+    visibility: hidden;
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+    visibility: visible;
+  }
+}
+
+@keyframes intro-bg-slide-desktop {
+  from {
+    opacity: 0;
+    transform: translateX(calc(-50% - 50px));
+    visibility: hidden;
+  }
+  to {
+    opacity: 1;
+    transform: translateX(-50%);
+    visibility: visible;
+  }
+}
+
+@keyframes intro-bg-slide-mobile {
+  from {
+    opacity: 0;
+    transform: translateX(-50px);
+    visibility: hidden;
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+    visibility: visible;
   }
 }
