@@ -5,9 +5,9 @@ export function useScrollAnimations(enabled: boolean): void {
     if (!enabled) return;
 
     const animationSelectors = [
-      '.letter .header',
-      '.letter .letter',
-      '.letter .family-description',
+      '[data-scroll-animate="letter-header"]',
+      '[data-scroll-animate="letter-body"]',
+      '[data-scroll-animate="letter-family"]',
       '[data-scroll-animate="calendar-countdown"]',
       '[data-scroll-animate="calendar-buttons"]',
       '[data-scroll-animate="gallery-title"]',
@@ -26,7 +26,7 @@ export function useScrollAnimations(enabled: boolean): void {
     );
 
     elements.forEach((element, index) => {
-      const animationType = element.closest('.letter')
+      const animationType = element.closest('[data-scroll-group="letter"]')
         ? 'letter-reveal'
         : index % 3 === 1
           ? 'fade-in-left'
