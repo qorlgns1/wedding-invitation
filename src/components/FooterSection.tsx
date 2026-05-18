@@ -1,4 +1,3 @@
-import { Users } from 'lucide-react';
 import { weddingConfig } from '../config/wedding';
 import { formatDottedWeddingDate } from '../lib/date';
 
@@ -8,16 +7,6 @@ export function FooterSection() {
   return (
     <footer className="mx-auto max-w-[var(--content-max-width)] border-t border-[rgba(185,148,147,0.2)] bg-[linear-gradient(to_bottom,#FFFFFF_0%,#F5F0F0_100%)] px-6 pb-6 pt-8 text-center max-[768px]:px-4 max-[768px]:pb-4 max-[768px]:pt-6 max-[480px]:px-[0.8em] max-[480px]:pb-[0.8em] max-[480px]:pt-[1.2em]">
       <div className="mx-auto flex max-w-[var(--content-max-width)] flex-col items-center gap-[0.8em]">
-        <div className="mb-2 flex items-center justify-center gap-2 text-[0.85em] text-wedding-muted max-[768px]:text-[0.8em]">
-          <span className="flex items-center gap-1">
-            <Users className="h-[1em] w-[1em]" aria-hidden="true" />
-            {weddingConfig.content.footer.visitorStats.today} <strong>-</strong>
-          </span>
-          <span>|</span>
-          <span>
-            {weddingConfig.content.footer.visitorStats.total} <strong>-</strong>
-          </span>
-        </div>
         <div className="mb-[0.2em]">
           <span className="font-sacramento text-[1.4rem] tracking-[0.05em] text-wedding-primary max-[768px]:text-[1.2rem] max-[480px]:text-[1.1rem]">
             {wedding.groom.nameEn} & {wedding.bride.nameEn}

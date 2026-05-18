@@ -94,12 +94,6 @@ export type WeddingConfig = {
         buttonTitle: string;
       };
     };
-    footer: {
-      visitorStats: {
-        today: string;
-        total: string;
-      };
-    };
     bgm: {
       notification: string;
     };
@@ -229,7 +223,6 @@ export const weddingConfig: WeddingConfig = {
         buttonTitle: '청첩장 보기',
       },
     },
-    footer: { visitorStats: { today: 'TODAY', total: 'TOTAL' } },
     bgm: { notification: '배경음악이 준비되었습니다' },
   },
   externalLinks: {
