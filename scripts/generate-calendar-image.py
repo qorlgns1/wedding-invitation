@@ -1,10 +1,29 @@
-from pathlib import Path
 import calendar
-from PIL import Image, ImageDraw, ImageFont
+from pathlib import Path
+
+try:
+    from PIL import Image, ImageDraw, ImageFont
+except ImportError as exc:
+    raise SystemExit("Pillow is required: python3 -m pip install Pillow") from exc
 
 
-ROOT = Path("/Users/marco/workspace/wedding-invitation")
-OUTPUT_PATH = ROOT / "public/static/assets/images/calendar.webp"
+PROJECT_ROOT = Path(__file__).resolve().parents[1]
+OUTPUT_PATH = PROJECT_ROOT / "public/static/assets/images/calendar.webp"
+
+FONT_CANDIDATES = {
+    "ko": [
+        Path("/System/Library/Fonts/AppleSDGothicNeo.ttc"),
+        Path("/Library/Fonts/AppleGothic.ttf"),
+        Path("/usr/share/fonts/opentype/noto/NotoSansCJK-Regular.ttc"),
+        Path("/usr/share/fonts/truetype/noto/NotoSansCJK-Regular.ttc"),
+    ],
+    "en": [
+        Path("/System/Library/Fonts/Helvetica.ttc"),
+        Path("/System/Library/Fonts/Supplemental/Arial.ttf"),
+        Path("/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf"),
+        Path("/usr/share/fonts/truetype/liberation2/LiberationSans-Regular.ttf"),
+    ],
+}
 
 WIDTH = 1698
 HEIGHT = 1862
@@ -19,8 +38,17 @@ LINE = (216, 216, 216)
 HIGHLIGHT = (225, 178, 182)
 
 
-def load_font(path: str, size: int) -> ImageFont.FreeTypeFont:
-    return ImageFont.truetype(path, size=size)
+def resolve_font(font_key: str) -> Path:
+    for path in FONT_CANDIDATES[font_key]:
+        if path.exists():
+            return path
+
+    searched = ", ".join(str(path) for path in FONT_CANDIDATES[font_key])
+    raise FileNotFoundError(f"No {font_key} font found. Searched: {searched}")
+
+
+def load_font(font_key: str, size: int) -> ImageFont.FreeTypeFont:
+    return ImageFont.truetype(resolve_font(font_key), size=size)
 
 
 def draw_centered_text(draw: ImageDraw.ImageDraw, text: str, y: int, font: ImageFont.FreeTypeFont, fill):
@@ -34,11 +62,10 @@ def draw_calendar():
     image = Image.new("RGB", (WIDTH, HEIGHT), BG)
     draw = ImageDraw.Draw(image)
 
-    # Fonts
-    ko_title_font = load_font("/System/Library/Fonts/AppleSDGothicNeo.ttc", 65)
-    en_title_font = load_font("/System/Library/Fonts/Helvetica.ttc", 61)
-    weekday_font = load_font("/System/Library/Fonts/AppleSDGothicNeo.ttc", 63)
-    day_font = load_font("/System/Library/Fonts/Helvetica.ttc", 67)
+    ko_title_font = load_font("ko", 65)
+    en_title_font = load_font("en", 61)
+    weekday_font = load_font("ko", 63)
+    day_font = load_font("en", 67)
 
     # Top text
     draw_centered_text(draw, "2026년 8월 8일 | 오후 2시", 130, ko_title_font, TEXT_MAIN)
