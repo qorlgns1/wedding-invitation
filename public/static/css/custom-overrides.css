@@ -1,42 +1,8 @@
 /* Custom Overrides for Mobile Wedding Invitation */
-/* Location 섹션 배경을 흰색으로 변경 + 상단 패딩 줄이기 */
-
-.location {
-    background-color: var(--white) !important;
-    padding: 2em 2em 4em 2em !important;
-}
-
 .image-overlay-share {
     max-width: var(--content-max-width);
     margin: 0 auto;
     padding: 0 2em;
-}
-
-/* 기존 location-top-wave 관련 스타일 무효화 */
-.location-top-wave {
-    display: none !important;
-}
-
-/* 지도 버튼 배경 색상 제거 (아이콘과 텍스트만 표시) */
-.map-buttons-container {
-    background: transparent !important;
-}
-
-.map-button {
-    background: transparent !important;
-}
-
-.map-button:hover {
-    background: transparent !important;
-}
-
-/* 주소 텍스트 스타일 */
-.address-text {
-    font-family: 'Noto Sans KR', sans-serif;
-    font-size: 1em;
-    color: var(--primary-color);
-    margin-top: 0.5em;
-    text-align: center;
 }
 
 /* === 사진 업로드 섹션 === */
@@ -316,14 +282,6 @@
 
 /* 모바일 최적화 */
 @media (max-width: 768px) {
-    .location {
-        padding: 1.5em 1em 3em 1em !important;
-    }
-
-    .address-text {
-        font-size: 0.9em;
-    }
-
     .photo-upload-section {
         padding: 3em 1em;
     }
