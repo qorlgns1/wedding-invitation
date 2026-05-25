@@ -130,6 +130,54 @@ textarea:focus {
   }
 }
 
+/* Scroll-reveal animations (classes applied by useScrollAnimations) */
+.fade-in-up,
+.fade-in-left,
+.fade-in-right,
+.letter-reveal {
+  opacity: 0;
+  transition:
+    opacity 0.7s ease-out,
+    transform 0.7s ease-out;
+  will-change: opacity, transform;
+}
+
+.fade-in-up {
+  transform: translateY(40px);
+}
+
+.fade-in-left {
+  transform: translateX(-40px);
+}
+
+.fade-in-right {
+  transform: translateX(40px);
+}
+
+.letter-reveal {
+  transform: translateY(30px);
+}
+
+.fade-in-up.animate,
+.fade-in-left.animate,
+.fade-in-right.animate,
+.letter-reveal.animate {
+  opacity: 1;
+  transform: none;
+}
+
+.delay-1 {
+  transition-delay: 0.15s;
+}
+
+.delay-2 {
+  transition-delay: 0.3s;
+}
+
+.delay-3 {
+  transition-delay: 0.45s;
+}
+
 @keyframes toast-scale-in {
   from {
     opacity: 0;
