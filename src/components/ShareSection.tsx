@@ -10,7 +10,7 @@ export function ShareSection({ showToast }: ShareSectionProps) {
   const shareToKakao = useKakaoShare(showToast);
 
   return (
-    <section className="mx-auto mt-6 w-full max-w-[var(--content-max-width)] overflow-hidden bg-white py-8">
+    <section className="mx-auto w-full max-w-[var(--content-max-width)] overflow-hidden bg-white py-8">
       <div className="flex justify-center" data-scroll-animate="share-button">
         <button
           type="button"
