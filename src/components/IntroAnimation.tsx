@@ -82,6 +82,7 @@ export function IntroAnimation({ onComplete }: IntroAnimationProps) {
     <div
       className="fixed left-1/2 top-0 z-[10000] h-full w-full max-w-[650px] -translate-x-1/2 overflow-hidden bg-black opacity-100 shadow-[0_0_20px_rgba(0,0,0,0.5)] [backface-visibility:hidden] [will-change:opacity] max-[768px]:left-0 max-[768px]:max-w-full max-[768px]:translate-x-0"
       id="intro-animation-overlay"
+      style={fadeStyle}
     >
       <div
         className={`absolute inset-0 flex items-center justify-center overflow-hidden transition-opacity duration-500 ease-out ${
@@ -95,12 +96,10 @@ export function IntroAnimation({ onComplete }: IntroAnimationProps) {
           className="absolute left-0 top-0 z-[1] h-full min-h-full w-full min-w-full animate-[intro-bg-slide-desktop_1s_cubic-bezier(0.25,0.46,0.45,0.94)_forwards] object-cover object-center brightness-[0.7] max-[768px]:animate-[intro-bg-slide-mobile_1s_cubic-bezier(0.25,0.46,0.45,0.94)_forwards]"
           decoding="async"
           fetchPriority="high"
-          style={fadeStyle}
         />
 
         <div
           className="relative z-[2] flex h-full w-full animate-[intro-slide-in_1s_cubic-bezier(0.25,0.46,0.45,0.94)_forwards] flex-col items-center justify-center p-5"
-          style={fadeStyle}
         >
           <div className="z-10 mb-5 flex min-h-[360px] w-full flex-col items-center justify-center text-center font-sacramento text-[90px] leading-[1.2] text-white [text-shadow:0_4px_10px_rgba(0,0,0,0.5)] max-[768px]:min-h-[250px] max-[768px]:text-[50px]">
             <span className="-translate-x-[30px] max-[768px]:-translate-x-[15px]">
