@@ -92,7 +92,7 @@ export function IntroAnimation({ onComplete }: IntroAnimationProps) {
           ref={imageRef}
           src={assetPath(weddingConfig.assets.introImage)}
           alt="Wedding Couple"
-          className="absolute left-1/2 top-0 z-[1] h-full min-h-full w-full min-w-full -translate-x-1/2 animate-[intro-bg-slide-desktop_1s_cubic-bezier(0.25,0.46,0.45,0.94)_forwards] object-cover object-center brightness-[0.7] max-[768px]:left-0 max-[768px]:translate-x-0 max-[768px]:animate-[intro-bg-slide-mobile_1s_cubic-bezier(0.25,0.46,0.45,0.94)_forwards]"
+          className="absolute left-0 top-0 z-[1] h-full min-h-full w-full min-w-full animate-[intro-bg-slide-desktop_1s_cubic-bezier(0.25,0.46,0.45,0.94)_forwards] object-cover object-center brightness-[0.7] max-[768px]:animate-[intro-bg-slide-mobile_1s_cubic-bezier(0.25,0.46,0.45,0.94)_forwards]"
           decoding="async"
           fetchPriority="high"
           style={fadeStyle}
