@@ -33,7 +33,7 @@ Add image files to `public/static/assets/images/wedding-snaps/`. Vite automatica
 ### 1) Install
 
 ```bash
-npm install
+pnpm install
 cp .env.example .env
 ```
 
@@ -47,15 +47,15 @@ Set this in `.env`:
 ### 3) Run locally
 
 ```bash
-npm run dev
+pnpm dev
 ```
 
 ### 4) Type and build checks
 
 ```bash
-npm run typecheck
-npm run build
-npm run preview
+pnpm typecheck
+pnpm build
+pnpm preview
 ```
 
 ## GitHub Pages deployment

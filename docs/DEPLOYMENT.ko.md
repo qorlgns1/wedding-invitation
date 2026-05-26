@@ -9,7 +9,7 @@
 
 ```bash
 cp .env.example .env
-npm install
+pnpm install
 ```
 
 `.env` 예시:
@@ -21,10 +21,10 @@ VITE_KAKAO_APP_KEY=your_kakao_javascript_key
 ## 3. 로컬 테스트
 
 ```bash
-npm run dev
-npm run typecheck
-npm run build
-npm run preview
+pnpm dev
+pnpm typecheck
+pnpm build
+pnpm preview
 ```
 
 ## 4. GitHub Pages 배포
