@@ -28,6 +28,45 @@ This project has been migrated from FastAPI to a **Vite + React + TypeScript sta
 
 Add image files to `public/static/assets/images/wedding-snaps/`. Vite automatically creates the gallery list, so `manifest.json` does not need to be edited manually.
 
+## Generating the Calendar Image
+
+`scripts/generate-calendar-image.py` generates `public/static/assets/images/calendar.webp`, which is displayed in the invitation calendar section. The script keeps the date, time, calendar month, highlight color, and image size reproducible in code.
+
+### Requirements
+
+- Python 3
+- Pillow
+
+Install Pillow once if it is not available locally.
+
+```bash
+python3 -m pip install -r scripts/requirements.txt
+```
+
+### Run
+
+```bash
+pnpm generate:calendar
+```
+
+This overwrites the existing `public/static/assets/images/calendar.webp`. Start the dev server to check the updated image in the page.
+
+```bash
+pnpm dev
+```
+
+### Changing the Date or Design
+
+When updating the calendar details, check these values in `scripts/generate-calendar-image.py`.
+
+- Top Korean text: `draw_centered_text(... "2026년 8월 8일 | 오후 2시" ...)`
+- Top English text: `draw_centered_text(... "Saturday, August 8, 2026 | PM 2:00" ...)`
+- Calendar month: `cal.monthdayscalendar(2026, 8)`
+- Highlighted day: `if day == 8`
+- Output path: `OUTPUT_PATH`
+
+After regenerating the image, commit the updated `calendar.webp`.
+
 ## Quick start
 
 ### 1) Install
