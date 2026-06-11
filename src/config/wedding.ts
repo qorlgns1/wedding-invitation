@@ -122,22 +122,15 @@ export type WeddingConfig = {
 type AccountSeed = {
   name: string;
   bank: string;
-  envKey: string;
-  maskedNumber: string;
+  number: string;
 };
 
-function readEnvValue(key: string): string | undefined {
-  const value = import.meta.env[key];
-  return typeof value === 'string' && value.trim() ? value.trim() : undefined;
-}
-
-function createAccount({ name, bank, envKey, maskedNumber }: AccountSeed): Account {
-  const number = readEnvValue(envKey);
+function createAccount({ name, bank, number }: AccountSeed): Account {
   return {
     name,
     bank,
-    number: number ?? maskedNumber,
-    copyable: Boolean(number),
+    number,
+    copyable: true,
   };
 }
 
@@ -177,40 +170,34 @@ export const weddingConfig: WeddingConfig = {
       createAccount({
         name: '배갑천',
         bank: '카카오뱅크 (예금주: 배기훈)',
-        envKey: 'VITE_ACCOUNT_GROOM_FATHER',
-        maskedNumber: '3333-13-*******',
+        number: '3333-13-8324048',
       }),
       createAccount({
         name: '이선미',
         bank: '우리은행 (예금주: 배기훈)',
-        envKey: 'VITE_ACCOUNT_GROOM_MOTHER',
-        maskedNumber: '1002-034-******',
+        number: '1002-034-705535',
       }),
       createAccount({
         name: '배기훈',
         bank: '카카오뱅크',
-        envKey: 'VITE_ACCOUNT_GROOM',
-        maskedNumber: '3333-01-*******',
+        number: '3333-01-8224159',
       }),
     ],
     bride: [
       createAccount({
         name: '김종선',
         bank: '우리은행',
-        envKey: 'VITE_ACCOUNT_BRIDE_FATHER',
-        maskedNumber: '1002-548-******',
+        number: '1002-548-949182',
       }),
       createAccount({
         name: '박선영',
         bank: 'SC제일은행',
-        envKey: 'VITE_ACCOUNT_BRIDE_MOTHER',
-        maskedNumber: '6472047****',
+        number: '64720475914',
       }),
       createAccount({
         name: '김슬비',
         bank: '카카오뱅크',
-        envKey: 'VITE_ACCOUNT_BRIDE',
-        maskedNumber: '3333-20-*******',
+        number: '3333-20-7595186',
       }),
     ],
   },
