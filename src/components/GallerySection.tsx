@@ -133,6 +133,7 @@ export function GallerySection() {
           }}
           onTouchStart={(event: TouchEvent<HTMLDivElement>) => {
             touchStartXRef.current = event.touches[0].clientX;
+            touchEndXRef.current = event.touches[0].clientX;
           }}
           onTouchMove={(event: TouchEvent<HTMLDivElement>) => {
             touchEndXRef.current = event.touches[0].clientX;
