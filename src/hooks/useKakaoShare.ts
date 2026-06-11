@@ -43,12 +43,12 @@ export function useKakaoShare(showToast: (message: string) => void) {
           title: shareConfig.title,
           description: shareConfig.description,
           imageUrl: weddingConfig.content.meta.image,
-          link: { mobileWebUrl: 'https://qorlgns1.github.io/wedding-invitation/', webUrl: 'https://qorlgns1.github.io/wedding-invitation/' },
+          link: { mobileWebUrl: window.location.href, webUrl: window.location.href },
         },
         buttons: [
           {
             title: shareConfig.buttonTitle,
-            link: { mobileWebUrl: 'https://qorlgns1.github.io/wedding-invitation/', webUrl: 'https://qorlgns1.github.io/wedding-invitation/' },
+            link: { mobileWebUrl: window.location.href, webUrl: window.location.href },
           },
         ],
         installTalk: true,
