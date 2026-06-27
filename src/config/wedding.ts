@@ -191,8 +191,8 @@ export const weddingConfig: WeddingConfig = {
       }),
       createAccount({
         name: '박선영',
-        bank: 'SC제일은행',
-        number: '64720475914',
+        bank: '국민은행',
+        number: '232-7010-4517-827',
       }),
       createAccount({
         name: '김슬비',
