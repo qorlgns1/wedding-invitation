@@ -26,7 +26,16 @@ This project has been migrated from FastAPI to a **Vite + React + TypeScript sta
 
 ## Adding Gallery Photos
 
-Add image files to `public/static/assets/images/wedding-snaps/`. Vite automatically creates the gallery list, so `manifest.json` does not need to be edited manually.
+Two options.
+
+**Option 1) Local files** — Add image files to `public/static/assets/images/wedding-snaps/`. Vite automatically creates the gallery list, so `manifest.json` does not need to be edited manually.
+
+**Option 2) Image links** — If you'd rather not commit photo files to the repo (large size, or you forked this template), upload your photos to a free image host like [ImgBB](https://imgbb.com) and copy the "Direct link" URL into `.env` (or Repository Variables for deployment).
+
+- `VITE_GALLERY_URLS`: comma-separated list of gallery photo URLs. When set, this replaces the local folder as the gallery source.
+- `VITE_COVER_IMAGE_URL`, `VITE_CALENDAR_IMAGE_URL`, `VITE_VENUE_MAP_IMAGE_URL`, `VITE_INTRO_IMAGE_URL`: swap the cover, calendar, venue map, and intro images the same way.
+
+Leave these unset to keep using the local bundled images.
 
 ## Generating the Calendar Image
 

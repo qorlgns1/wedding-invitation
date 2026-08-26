@@ -111,6 +111,7 @@ export type WeddingConfig = {
     backgroundMusic: string;
     coverImage: string;
     galleryPath: string;
+    galleryUrls: string[];
     mapImage: string;
     kakaotalkIcon: string;
     letterDeco: string;
@@ -204,6 +205,20 @@ const metaDescription = env(
   )}일 (${weddingDayOfWeek}) ${weddingDisplayTime}, ${venueName}에서 진행됩니다`
 );
 const metaImage = env('VITE_META_IMAGE', '/static/assets/images/og-image.webp');
+
+// 이미지 URL(예: ImgBB 등에 업로드한 링크)을 지정하면 로컬 파일 대신 그 URL을 사용한다.
+// 값이 없으면 저장소에 포함된 로컬 이미지를 그대로 사용한다.
+const coverImage = env('VITE_COVER_IMAGE_URL', '/static/assets/images/cover.webp');
+const calendarImage = env('VITE_CALENDAR_IMAGE_URL', '/static/assets/images/calendar.webp');
+const mapImage = env('VITE_VENUE_MAP_IMAGE_URL', '/static/assets/images/wedding-signature.webp');
+const introImage = env('VITE_INTRO_IMAGE_URL', '/static/assets/images/animation1.webp');
+
+// 콤마로 구분된 이미지 URL 목록. 값이 있으면 로컬 wedding-snaps 폴더 스캔 대신
+// 이 URL들로 갤러리를 채운다.
+const galleryUrls = env('VITE_GALLERY_URLS', '')
+  .split(',')
+  .map((url) => url.trim())
+  .filter((url) => url.length > 0);
 
 export const weddingConfig: WeddingConfig = {
   wedding: {
@@ -336,12 +351,13 @@ export const weddingConfig: WeddingConfig = {
   },
   assets: {
     backgroundMusic: '/static/assets/audio/wedding-music.mp3',
-    coverImage: '/static/assets/images/cover.webp',
+    coverImage,
     galleryPath: '/static/assets/images/wedding-snaps/',
-    mapImage: '/static/assets/images/wedding-signature.webp',
+    galleryUrls,
+    mapImage,
     kakaotalkIcon: '/static/assets/images/kakaotalk.webp',
     letterDeco: '/static/assets/images/letter-deco.svg',
-    calendarImage: '/static/assets/images/calendar.webp',
-    introImage: '/static/assets/images/animation1.webp',
+    calendarImage,
+    introImage,
   },
 };

@@ -13,6 +13,11 @@ import {
 
 export function GallerySection() {
   const photos = useMemo<GalleryPhoto[]>(() => {
+    const { galleryUrls } = weddingConfig.assets;
+    if (galleryUrls.length > 0) {
+      return galleryUrls.map((url, index) => ({ src: url, key: `${index}-${url}` }));
+    }
+
     const basePath = normalizeGalleryBasePath(weddingConfig.assets.galleryPath);
 
     return galleryPhotoFiles.map((fileName) => ({

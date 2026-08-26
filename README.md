@@ -26,7 +26,16 @@ FastAPI 기반 청첩장 프로젝트를 **Vite + React + TypeScript 정적 사�
 
 ## 갤러리 사진 추가
 
-`public/static/assets/images/wedding-snaps/`에 이미지 파일을 넣으면 Vite가 자동으로 갤러리 목록을 생성합니다. `manifest.json`을 직접 수정할 필요가 없습니다.
+두 가지 방법이 있습니다.
+
+**방법 1) 로컬 파일** — `public/static/assets/images/wedding-snaps/`에 이미지 파일을 넣으면 Vite가 자동으로 갤러리 목록을 생성합니다. `manifest.json`을 직접 수정할 필요가 없습니다.
+
+**방법 2) 이미지 링크** — 저장소에 사진 파일을 직접 커밋하고 싶지 않다면 (용량이 커지거나, 포크해서 쓰는 경우) [ImgBB](https://imgbb.com)처럼 무료 이미지 호스팅에 사진을 업로드하고 "Direct link" URL을 복사해서 `.env`(또는 배포 시 Repository Variables)에 넣으세요.
+
+- `VITE_GALLERY_URLS`: 콤마(,)로 구분한 갤러리 사진 URL 목록. 값이 있으면 로컬 폴더 대신 이 목록을 사용합니다.
+- `VITE_COVER_IMAGE_URL`, `VITE_CALENDAR_IMAGE_URL`, `VITE_VENUE_MAP_IMAGE_URL`, `VITE_INTRO_IMAGE_URL`: 커버/달력/예식장 지도/인트로 이미지도 각각 링크로 교체할 수 있습니다.
+
+비워두면 지금처럼 저장소에 포함된 로컬 이미지를 사용합니다.
 
 ## 달력 이미지 생성
 
