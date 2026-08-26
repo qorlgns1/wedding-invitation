@@ -15,10 +15,28 @@
       href="https://fonts.gstatic.com"
       crossorigin="anonymous"
     />
+    <!--
+      실제 코드에서 쓰지 않는 Cormorant Garamond와 Noto Sans KR 300(light)은 빼서
+      불필요한 폰트 파일 다운로드를 줄였다. 폰트 스타일시트 자체도 렌더링을
+      막지 않도록 preload 후 스왑하는 방식으로 로드한다.
+    -->
+    <link
+      rel="preload"
+      as="style"
+      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400&family=Noto+Sans+KR:wght@400;500;600;700&family=Sacramento&family=Spectral:wght@400&family=Sriracha&display=swap"
+    />
     <link
       rel="stylesheet"
-      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Montserrat:wght@400&family=Noto+Sans+KR:wght@300;400;500;600;700&family=Sacramento&family=Spectral:wght@400&family=Sriracha&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400&family=Noto+Sans+KR:wght@400;500;600;700&family=Sacramento&family=Spectral:wght@400&family=Sriracha&display=swap"
+      media="print"
+      onload="this.media='all'"
     />
+    <noscript>
+      <link
+        rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400&family=Noto+Sans+KR:wght@400;500;600;700&family=Sacramento&family=Spectral:wght@400&family=Sriracha&display=swap"
+      />
+    </noscript>
 
     <!-- 인트로 이미지가 LCP 후보라 외부 호스트 연결과 다운로드를 최대한 앞당긴다 -->
     <link rel="preconnect" href="https://i.ibb.co" />
