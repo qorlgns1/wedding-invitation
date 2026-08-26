@@ -134,85 +134,154 @@ function createAccount({ name, bank, number }: AccountSeed): Account {
   };
 }
 
+// 실제 배포에서는 아래 env 변수를 채워서 이 청첩장의 이름/날짜/장소/계좌를 지정합니다.
+// 값이 비어 있으면 저장소에는 커밋되지 않는, 명백한 데모용 예시 데이터가 표시됩니다.
+// 전체 목록과 설명은 .env.example을 참고하세요.
+const rawEnv = import.meta.env as unknown as Record<string, string | undefined>;
+
+function env(key: string, fallback: string): string {
+  const value = rawEnv[key];
+  return value && value.trim().length > 0 ? value : fallback;
+}
+
+const DAY_OF_WEEK_KR = ['일', '월', '화', '수', '목', '금', '토'];
+
+function deriveDayOfWeek(year: number, month: number, day: number): string {
+  return DAY_OF_WEEK_KR[new Date(year, month - 1, day).getDay()];
+}
+
+function deriveDisplayTime(time: string): string {
+  const [hourStr, minuteStr] = time.split(':');
+  const hour = Number(hourStr);
+  const minute = Number(minuteStr ?? '0');
+  const period = hour < 12 ? '오전' : '오후';
+  const hour12 = hour % 12 === 0 ? 12 : hour % 12;
+  const minutePart = minute > 0 ? ` ${minute}분` : '';
+  return `${period} ${hour12}시${minutePart}`;
+}
+
+const groomNameKr = env('VITE_GROOM_NAME_KR', '김민준');
+const groomNameEn = env('VITE_GROOM_NAME_EN', 'Minjun');
+const groomDisplayName = env('VITE_GROOM_DISPLAY_NAME', '민준');
+const groomBirthOrder = env('VITE_GROOM_BIRTH_ORDER', '장남');
+const groomFatherName = env('VITE_GROOM_FATHER_NAME', '김철수');
+const groomMotherName = env('VITE_GROOM_MOTHER_NAME', '이영희');
+
+const brideNameKr = env('VITE_BRIDE_NAME_KR', '이서연');
+const brideNameEn = env('VITE_BRIDE_NAME_EN', 'Seoyeon');
+const brideDisplayName = env('VITE_BRIDE_DISPLAY_NAME', '서연');
+const brideBirthOrder = env('VITE_BRIDE_BIRTH_ORDER', '장녀');
+const brideFatherName = env('VITE_BRIDE_FATHER_NAME', '박정훈');
+const brideMotherName = env('VITE_BRIDE_MOTHER_NAME', '최수진');
+
+const weddingDateRaw = env('VITE_WEDDING_DATE', '2030-05-17');
+const [weddingYearStr, weddingMonthStr, weddingDayStr] = weddingDateRaw.split('-');
+const weddingYear = Number(weddingYearStr);
+const weddingMonth = Number(weddingMonthStr);
+const weddingDay = Number(weddingDayStr);
+const weddingTime = env('VITE_WEDDING_TIME', '14:00');
+const weddingDayOfWeek = deriveDayOfWeek(weddingYear, weddingMonth, weddingDay);
+const weddingDisplayTime = deriveDisplayTime(weddingTime);
+const weddingIsoFormat = `${weddingDateRaw}T${weddingTime}:00`;
+
+const venueName = env('VITE_VENUE_NAME', '서울 그랜드 웨딩홀');
+const venueAddress = env('VITE_VENUE_ADDRESS', venueName);
+const venueFullAddress = env('VITE_VENUE_FULL_ADDRESS', venueAddress);
+const encodedVenueName = encodeURIComponent(venueName);
+
+const letterContent = env(
+  'VITE_LETTER_CONTENT',
+  '서로를 만나 함께한 시간,<br>이제 하나의 인연으로 이어갑니다.<br><br>가장 소중한 날, 곁에서 축복해 주시면<br>더없이 큰 기쁨이 되겠습니다.<br><br>믿음과 사랑으로 하나 된 시작을<br>함께 축복해 주세요.'
+);
+
+const pageTitle = env('VITE_PAGE_TITLE', `${groomNameKr} ♥ ${brideNameKr}의 결혼식에 초대합니다`);
+const metaTitle = env('VITE_META_TITLE', `${groomDisplayName} ♥ ${brideDisplayName}의 결혼식`);
+const metaDescription = env(
+  'VITE_META_DESCRIPTION',
+  `${weddingYear}년 ${String(weddingMonth).padStart(2, '0')}월 ${String(weddingDay).padStart(
+    2,
+    '0'
+  )}일 (${weddingDayOfWeek}) ${weddingDisplayTime}, ${venueName}에서 진행됩니다`
+);
+const metaImage = env('VITE_META_IMAGE', '/static/assets/images/og-image.webp');
+
 export const weddingConfig: WeddingConfig = {
   wedding: {
     groom: {
-      nameKr: '배기훈',
-      nameEn: 'Kihoon',
-      displayName: '기훈',
-      birthOrder: '장남',
-      parents: { father: '배갑천', mother: '이선미' },
+      nameKr: groomNameKr,
+      nameEn: groomNameEn,
+      displayName: groomDisplayName,
+      birthOrder: groomBirthOrder,
+      parents: { father: groomFatherName, mother: groomMotherName },
     },
     bride: {
-      nameKr: '김슬비',
-      nameEn: 'Seulbi',
-      displayName: '슬비',
-      birthOrder: '장녀',
-      parents: { father: '김종선', mother: '박선영' },
+      nameKr: brideNameKr,
+      nameEn: brideNameEn,
+      displayName: brideDisplayName,
+      birthOrder: brideBirthOrder,
+      parents: { father: brideFatherName, mother: brideMotherName },
     },
     date: {
-      year: 2026,
-      month: 8,
-      day: 8,
-      time: '14:00',
-      dayOfWeek: '토',
-      displayTime: '오후 2시',
-      isoFormat: '2026-08-08T14:00:00',
+      year: weddingYear,
+      month: weddingMonth,
+      day: weddingDay,
+      time: weddingTime,
+      dayOfWeek: weddingDayOfWeek,
+      displayTime: weddingDisplayTime,
+      isoFormat: weddingIsoFormat,
     },
     venue: {
-      name: '합정 웨딩시그니처 4F 아너스홀',
-      address: '합정 웨딩시그니처 4F 아너스홀',
-      fullAddress: '합정 웨딩시그니처 4F 아너스홀',
+      name: venueName,
+      address: venueAddress,
+      fullAddress: venueFullAddress,
     },
   },
   accounts: {
     groom: [
       createAccount({
-        name: '배갑천',
-        bank: '카카오뱅크 (예금주: 배기훈)',
-        number: '3333-13-8324048',
+        name: groomFatherName,
+        bank: env('VITE_ACCOUNT_GROOM_FATHER_BANK', '카카오뱅크'),
+        number: env('VITE_ACCOUNT_GROOM_FATHER_NUMBER', '3333-00-0000001'),
       }),
       createAccount({
-        name: '이선미',
-        bank: '우리은행 (예금주: 배기훈)',
-        number: '1002-034-705535',
+        name: groomMotherName,
+        bank: env('VITE_ACCOUNT_GROOM_MOTHER_BANK', '우리은행'),
+        number: env('VITE_ACCOUNT_GROOM_MOTHER_NUMBER', '1002-000-000002'),
       }),
       createAccount({
-        name: '배기훈',
-        bank: '카카오뱅크',
-        number: '3333-01-8224159',
+        name: groomNameKr,
+        bank: env('VITE_ACCOUNT_GROOM_BANK', '카카오뱅크'),
+        number: env('VITE_ACCOUNT_GROOM_NUMBER', '3333-00-0000003'),
       }),
     ],
     bride: [
       createAccount({
-        name: '김종선',
-        bank: '우리은행',
-        number: '1002-548-949182',
+        name: brideFatherName,
+        bank: env('VITE_ACCOUNT_BRIDE_FATHER_BANK', '우리은행'),
+        number: env('VITE_ACCOUNT_BRIDE_FATHER_NUMBER', '1002-000-000004'),
       }),
       createAccount({
-        name: '박선영',
-        bank: '국민은행',
-        number: '232-7010-4517-827',
+        name: brideMotherName,
+        bank: env('VITE_ACCOUNT_BRIDE_MOTHER_BANK', '국민은행'),
+        number: env('VITE_ACCOUNT_BRIDE_MOTHER_NUMBER', '232-0000-0000005'),
       }),
       createAccount({
-        name: '김슬비',
-        bank: '카카오뱅크',
-        number: '3333-20-7595186',
+        name: brideNameKr,
+        bank: env('VITE_ACCOUNT_BRIDE_BANK', '카카오뱅크'),
+        number: env('VITE_ACCOUNT_BRIDE_NUMBER', '3333-00-0000006'),
       }),
     ],
   },
   content: {
-    pageTitle: '배기훈 ♥ 김슬비의 결혼식에 초대합니다',
+    pageTitle,
     meta: {
-      title: '기훈 ♥ 슬비의 결혼식',
-      description:
-        '2026년 08월 08일 (토) 오후 2시, 합정 웨딩시그니처 4F 아너스홀에서 진행됩니다',
-      image:
-        'https://qorlgns1.github.io/wedding-invitation/static/assets/images/og-image.webp',
+      title: metaTitle,
+      description: metaDescription,
+      image: metaImage,
     },
     countdown: {
       labels: { days: 'DAYS', hour: 'HOUR', min: 'MIN', sec: 'SEC' },
-      message: '기훈 ♥ 슬비의 결혼식이 {days}일 남았습니다',
+      message: `${groomDisplayName} ♥ ${brideDisplayName}의 결혼식이 {days}일 남았습니다`,
     },
     buttons: {
       googleCalendar: 'Google Calendar에 추가',
@@ -221,8 +290,7 @@ export const weddingConfig: WeddingConfig = {
     letter: {
       title: '두 사람의 결혼식에 초대합니다.',
       header: 'I N V I T A T I O N',
-      content:
-        '8년의 시간,<br>그리고 또 하나의 8이 겹치는 날.<br><br>지구 반대편에서 운명처럼 만나<br>2026년 8월 8일, 사랑의 무한대(∞)를 약속합니다.<br><br>지금처럼, 앞으로도<br>서로의 가장 큰 행복으로 함께하겠습니다.',
+      content: letterContent,
     },
     gallery: {
       title: '웨딩 갤러리',
@@ -247,9 +315,13 @@ export const weddingConfig: WeddingConfig = {
     },
     share: {
       kakaoShare: {
-        title: '💒 기훈 ♥ 슬비의 결혼식',
-        description:
-          '2026년 08월 08일 (토) 오후 2시\n합정 웨딩시그니처 4F 아너스홀에서 진행됩니다.\n\n소중한 분을 모시고 참석해주시면 감사하겠습니다.',
+        title: `💒 ${groomDisplayName} ♥ ${brideDisplayName}의 결혼식`,
+        description: `${weddingYear}년 ${String(weddingMonth).padStart(2, '0')}월 ${String(
+          weddingDay
+        ).padStart(
+          2,
+          '0'
+        )}일 (${weddingDayOfWeek}) ${weddingDisplayTime}\n${venueName}에서 진행됩니다.\n\n소중한 분을 모시고 참석해주시면 감사하겠습니다.`,
         buttonTitle: '청첩장 보기',
       },
     },
@@ -257,12 +329,9 @@ export const weddingConfig: WeddingConfig = {
   },
   externalLinks: {
     maps: {
-      naver:
-        'https://map.naver.com/v5/search/%ED%95%A9%EC%A0%95%20%EC%9B%A8%EB%94%A9%EC%8B%9C%EA%B7%B8%EB%8B%88%EC%B2%98',
-      kakao:
-        'https://map.kakao.com/?q=%ED%95%A9%EC%A0%95%20%EC%9B%A8%EB%94%A9%EC%8B%9C%EA%B7%B8%EB%8B%88%EC%B2%98',
-      tmap:
-        'https://www.google.com/maps/search/?api=1&query=%ED%95%A9%EC%A0%95%20%EC%9B%A8%EB%94%A9%EC%8B%9C%EA%B7%B8%EB%8B%88%EC%B2%98',
+      naver: `https://map.naver.com/v5/search/${encodedVenueName}`,
+      kakao: `https://map.kakao.com/?q=${encodedVenueName}`,
+      tmap: `https://www.google.com/maps/search/?api=1&query=${encodedVenueName}`,
     },
   },
   assets: {

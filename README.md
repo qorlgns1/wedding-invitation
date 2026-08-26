@@ -78,10 +78,15 @@ cp .env.example .env
 
 ### 2) 환경변수 설정
 
-`.env` 파일에 아래 값을 입력하세요.
+`.env` 파일을 채우지 않으면 저장소에 커밋되지 않는 데모용 예시 데이터(가상의 이름/날짜/장소/계좌)가 표시됩니다. 이 저장소를 실제 청첩장으로 배포하려면 `.env`에 아래 값을 채우세요. 전체 목록은 [`.env.example`](./.env.example)을 참고하세요.
 
-- `VITE_KAKAO_APP_KEY` (선택)
-- `VITE_ACCOUNT_*` (선택, 실제 청첩장 배포용 계좌번호. 비워두면 마스킹)
+- `VITE_KAKAO_APP_KEY` (선택, 카카오톡 공유)
+- `VITE_GROOM_*` / `VITE_BRIDE_*` (신랑/신부 이름, 부모님 성함)
+- `VITE_WEDDING_DATE` / `VITE_WEDDING_TIME` (예식 일시)
+- `VITE_VENUE_*` (예식 장소)
+- `VITE_LETTER_CONTENT` (초대의 글)
+- `VITE_PAGE_TITLE` / `VITE_META_*` (브라우저 탭 제목, 카카오톡·SNS 공유 미리보기)
+- `VITE_ACCOUNT_*` (계좌 은행명/번호. 비워두면 데모용 가짜 계좌가 표시됨)
 
 ### 3) 개발 서버 실행
 
@@ -101,9 +106,7 @@ pnpm preview
 
 이 저장소는 `.github/workflows/pages.yml`로 `main` push 시 자동 배포됩니다.
 
-필요한 Repository Variables:
-
-- `VITE_KAKAO_APP_KEY` (선택)
+필요한 필요한 Repository Variables는 [`docs/DEPLOYMENT.ko.md`](./docs/DEPLOYMENT.ko.md)를 참고하세요. 이 값들은 어차피 배포된 페이지에 그대로 공개되는 내용이라 Variables로 등록해도 무방합니다.
 
 자세한 배포 절차는 [`docs/DEPLOYMENT.ko.md`](./docs/DEPLOYMENT.ko.md) 참고.
 

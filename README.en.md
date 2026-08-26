@@ -78,10 +78,15 @@ cp .env.example .env
 
 ### 2) Configure env
 
-Set this in `.env`:
+Leaving `.env` unfilled shows demo placeholder data (fictional names/date/venue/accounts) that is never committed to the repo. To deploy this as a real invitation, fill in `.env`. See [`.env.example`](./.env.example) for the full list.
 
-- `VITE_KAKAO_APP_KEY` (optional)
-- `VITE_ACCOUNT_*` (optional account numbers for a real invitation build; empty values stay masked)
+- `VITE_KAKAO_APP_KEY` (optional, Kakao share)
+- `VITE_GROOM_*` / `VITE_BRIDE_*` (names, parents' names)
+- `VITE_WEDDING_DATE` / `VITE_WEDDING_TIME` (ceremony date/time)
+- `VITE_VENUE_*` (venue)
+- `VITE_LETTER_CONTENT` (invitation letter)
+- `VITE_PAGE_TITLE` / `VITE_META_*` (browser tab title, social share preview)
+- `VITE_ACCOUNT_*` (bank/account number; empty pairs show a demo placeholder account)
 
 ### 3) Run locally
 
@@ -101,9 +106,7 @@ pnpm preview
 
 Auto deploy is configured via `.github/workflows/pages.yml` on `main` pushes.
 
-Repository variable:
-
-- `VITE_KAKAO_APP_KEY` (optional)
+See [`docs/DEPLOYMENT.md`](./docs/DEPLOYMENT.md) for the full list of Repository Variables. Since this content is displayed publicly on the deployed page anyway, storing it as Variables (rather than Secrets) is fine.
 
 See [`docs/DEPLOYMENT.md`](./docs/DEPLOYMENT.md) for details.
 

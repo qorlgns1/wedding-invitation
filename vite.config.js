@@ -1,15 +1,12 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { defineConfig } from 'vite';
+import { defineConfig, loadEnv } from 'vite';
 import react from '@vitejs/plugin-react';
 import tailwindcss from '@tailwindcss/vite';
 
-process.env.VITE_KAKAO_APP_KEY ??= '';
-
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-const PROD_BASE_PATH = process.env.VITE_BASE_PATH || '/wedding-invitation/';
 const GALLERY_DIR = path.resolve(__dirname, 'public/static/assets/images/wedding-snaps');
 const GALLERY_MODULE_ID = 'virtual:gallery-photos';
 const RESOLVED_GALLERY_MODULE_ID = `\0${GALLERY_MODULE_ID}`;
@@ -60,7 +57,29 @@ function galleryPhotosPlugin() {
   };
 }
 
-export default defineConfig(({ command }) => ({
-  base: command === 'serve' ? '/' : PROD_BASE_PATH,
-  plugins: [galleryPhotosPlugin(), tailwindcss(), react()],
-}));
+// index.html의 %VITE_*% 치환에 쓰이는 값들. process.env에 미리 기본값을 넣어두면
+// dotenv가 이미 설정된 키를 덮어쓰지 않아 .env의 실제 값이 무시되므로,
+// 반드시 loadEnv로 .env를 먼저 읽은 뒤 최종값(.env 값 또는 기본값)을 대입한다.
+const HTML_ENV_DEFAULTS = {
+  VITE_KAKAO_APP_KEY: '',
+  VITE_PAGE_TITLE: '김민준 ♥ 이서연의 결혼식에 초대합니다',
+  VITE_META_TITLE: '민준 ♥ 서연의 결혼식',
+  VITE_META_DESCRIPTION: '2030년 05월 17일 (금) 오후 2시, 서울 그랜드 웨딩홀에서 진행됩니다',
+  VITE_META_IMAGE: '/static/assets/images/og-image.webp',
+};
+
+export default defineConfig(({ command, mode }) => {
+  const fileEnv = loadEnv(mode, process.cwd(), 'VITE_');
+
+  for (const [key, fallback] of Object.entries(HTML_ENV_DEFAULTS)) {
+    const value = fileEnv[key];
+    process.env[key] = value && value.trim().length > 0 ? value : fallback;
+  }
+
+  const PROD_BASE_PATH = fileEnv.VITE_BASE_PATH || '/wedding-invitation/';
+
+  return {
+    base: command === 'serve' ? '/' : PROD_BASE_PATH,
+    plugins: [galleryPhotosPlugin(), tailwindcss(), react()],
+  };
+});
