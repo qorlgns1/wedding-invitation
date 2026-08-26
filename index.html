@@ -20,6 +20,10 @@
       href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Montserrat:wght@400&family=Noto+Sans+KR:wght@300;400;500;600;700&family=Sacramento&family=Spectral:wght@400&family=Sriracha&display=swap"
     />
 
+    <!-- 인트로 이미지가 LCP 후보라 외부 호스트 연결과 다운로드를 최대한 앞당긴다 -->
+    <link rel="preconnect" href="https://i.ibb.co" />
+    <link rel="preload" as="image" href="%VITE_INTRO_IMAGE_URL%" fetchpriority="high" />
+
     <meta property="og:title" content="%VITE_META_TITLE%" />
     <meta property="og:description" content="%VITE_META_DESCRIPTION%" />
     <meta property="og:image" content="%VITE_META_IMAGE%" />

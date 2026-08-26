@@ -66,6 +66,8 @@ const HTML_ENV_DEFAULTS = {
   VITE_META_TITLE: '민준 ♥ 서연의 결혼식',
   VITE_META_DESCRIPTION: '2030년 05월 17일 (금) 오후 2시, 서울 그랜드 웨딩홀에서 진행됩니다',
   VITE_META_IMAGE: '/static/assets/images/og-image.webp',
+  // wedding.ts의 introImage 기본값과 동일하게 맞춘다 (preload 태그가 빈 값을 갖지 않도록).
+  VITE_INTRO_IMAGE_URL: '/static/assets/images/animation1.webp',
 };
 
 export default defineConfig(({ command, mode }) => {
